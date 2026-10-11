@@ -1,32 +1,18 @@
 [한국어](./newsletter-langgraph.md) | [English](./newsletter-langgraph.en.md)
 
-# Newsletter generation and evaluation split into separate LangGraph nodes; after the team project, a check that compares numbers and quotes with the sources, which the LLM judge could not see
+# LangGraph Newsletter Generation — One-pass drafts mixed separate events and still hallucinated
 
-> As leader of a five-person team I designed the LLM generation pipeline so that a draft that does not pass evaluation within three attempts is not saved. After the team project ended I continued alone on a fork, delegated implementation to an AI coding agent (Claude Code), set the direction and the verification criteria, and withdrew the figures I could not back up.
+> Boostcamp AI Tech 8th final project | Leader of a five-person team, then solo follow-up | Jan to Feb 2026
 
-## Overview
+The team built a service that groups articles about the same event, has an LLM write them up as one newsletter, and ranks the newsletters for each user.
 
-| Item | Details |
-| --- | --- |
-| Period | Team phase: Jan 2026 to Feb 2026. Personal follow-up: a code review in Jul 2026, then ongoing work on the fork since Sep 2026 (this page reflects the commit of 2026-10-06) |
-| Type | Team project (final project of the RecSys track, Boostcamp AI Tech 8th, NAVER Connect Foundation) and personal follow-up work on a fork of the team repository |
-| Team and my role | Project leader of a 5-person team, about 30% contribution. Led the architecture and module interface design and owned the LLM generation pipeline. The follow-up is solo work with implementation delegated to Claude Code |
-| Tech | Team phase: Python, LangGraph, HyperCLOVA X, BGE-M3, HDBSCAN, Airflow, PostgreSQL (pgvector). Follow-up: OpenAI-compatible LLM adapter (Gemini), Docker Compose, GitHub Actions, Claude Code |
-| Headline results | Team phase: a generation flow capped at three attempts per article cluster, in which a draft that still fails is not saved.<br>Follow-up (implemented by an AI coding agent): the source check caught all 500 cases where one number was scaled by 1.1 (excluding 15 cases where the changed value already appeared elsewhere) and wrongly blocked 0 of 494 numbers that were only rewritten in an equivalent notation (synthetic perturbations; the false-positive figure was re-measured on the same perturbation set after the fix) |
+As team leader I led the architecture and module interface design and owned the LLM generation pipeline; my contribution was about 30%.
 
-The code and the design decision records are on the [fork](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01) (CI tests on every push, tests/, docs/adr/). Team-phase code runs up to commit `ef7c176`; everything after it is the personal follow-up.
+I built a generation flow capped at three attempts, in which a draft that still fails evaluation is not saved, and after the team project I delegated implementation on a fork to an AI coding agent and added a check that compares numbers and quotes with the source articles.
 
-## Problem
+---
 
-When many outlets report the same event, a reader has to go through several overlapping articles and piece the story together. The team set out to build a service that groups articles about one event, has an LLM write a single newsletter from them, and ranks the newsletters for each user.
-
-Handing a group of articles to an LLM and asking for one pass broke down in two places. Embedding clusters mixed different events, so one newsletter ended up covering several topics. And prompt tuning alone could not stop hallucinations and missing key facts every time.
-
-Problems remained after the team project ended. The LLM that judged drafts saw only the titles of the source articles, and some of the figures I had written into the team README had no code in the repository that produced them.
-
-## What I did and why
-
-Items 1 to 3 are decisions I made during the team phase. Items 4 and 5 belong to the personal follow-up after the final team commit `ef7c176` (2026-02-10); an AI coding agent implemented them and researched the design options.
+## What I Did in the Team Phase
 
 ```mermaid
 flowchart TD
@@ -50,122 +36,133 @@ flowchart TD
     class F,R followup
 ```
 
-Solid boxes are the flow designed in the team phase; the two dashed boxes are checks added in the follow-up. The evaluator's fail branch is the team-phase behaviour. Under the follow-up's default settings the evaluator only records its scores.
+Solid boxes are the flow designed in the team phase; the two dashed boxes are checks added in the solo follow-up.
 
-### 1. [Team phase] Generation and evaluation run in separate nodes, and a draft that fails three attempts is not saved
+### 1. Separate generation and evaluation — Prompt edits alone did not stop hallucination or omissions
 
-I judged that prompt edits alone could not stop hallucinations and omissions every time, so I separated the node that writes from the node that judges. The evaluator scores each draft from 0 to 10 on missing key facts, structure and hallucination, and passes only 5 or above. When a draft fails, the evaluator's revision comments are accumulated across attempts and passed to the next generation. To limit cost and latency I capped generation at three attempts per article cluster; if the third draft also fails, nothing is saved. Each saved newsletter keeps the per-attempt scores and comments, so it is possible to trace which draft was rejected and why.
+**Problem**: Prompt tuning alone could not reliably prevent hallucination or missing key facts.
 
-The cost: a cluster that does not pass within three attempts produces no newsletter that day.
+**Solution**: Separated the writing node from the judging node in LangGraph. In the evaluator node an LLM (HyperCLOVA X) scores the draft from 0 to 10 on missing key facts, structure and hallucination, and only 5 or above passes. On a fail, the evaluator's comments accumulate across attempts and go into the next generation.
 
-### 2. [Team phase] Clusters are split a second time, and an LLM first checks whether a cluster is one event
+**Result**: To bound cost and latency, capped generation at three attempts per article cluster; if the third draft also fails, nothing is saved. Stored each saved newsletter with its per-attempt scores and comments.
 
-The first-pass clusters, HDBSCAN over BGE-M3 embeddings, mixed different events. I added two steps so that each newsletter covers one event. The first is a second-stage split: a cluster of four or more articles is tentatively split in two, and the Silhouette Score, the overlap of named entities in the titles and the share of duplicate titles together decide whether the split is kept. The second is the first judging node in LangGraph, where an LLM decides whether the cluster converges on a single issue. If it finds unrelated articles, the flow removes the outliers or keeps only the largest sub-group and judges again. A cluster that cannot be cleaned up, or that drops below three articles, is skipped.
+### 2. Two-stage clustering — First-pass clusters mixed separate events
 
-Because only the largest sub-group is kept, the other sub-groups do not become newsletters in that run.
+**Problem**: The first-pass clusters, built by grouping BGE-M3 embeddings with HDBSCAN, mixed separate events, so one newsletter covered several topics.
 
-### 3. [Team phase] Collection runs seven times a day and clustering and generation once, and module inputs and outputs were agreed before implementation
+**Solution**: Tried splitting every cluster of four or more articles in two, then decided whether to keep the split from the Silhouette Score, the overlap of named entities in titles and the share of duplicate titles. In the first LangGraph judging node, an LLM checks whether the cluster is one event; if it is mixed, the outlying articles are removed or only the largest sub-group is kept, and the cluster is judged again.
 
-Articles about one event come out over the course of a day. Clustering and writing on every collection run would split one event across several newsletters. So I divided the Airflow batch in two: collection, body extraction and embedding accumulate seven times a day, and clustering and generation run once a day over everything collected. With this structure, newsletters and recommendations refresh only once a day.
+**Result**: A flow that skips any cluster that cannot be cleaned up into one event or shrinks to fewer than three articles.
 
-Five people owned different modules, so before implementation we agreed on data formats, APIs and database storage rules. When parse failures and rate-limit errors kept recurring because each module handled LLM responses differently, I had retries and parsing managed in one unified LLM client instead of patching each module. The retry added at that point had no upper bound; it was fixed in item 4.
+### 3. Batch schedule and interfaces — Clustering at every collection split one event into pieces
 
-### 4. [Personal follow-up] With implementation delegated to an agent, a check now compares numbers and quotes with the source articles, which the LLM judge could not see
+**Problem**: Articles about one event come out over the course of a day, so clustering at every collection splits one event across several newsletters. Each module also expected a different LLM response format, and parse failures and rate-limit errors kept recurring.
 
-The team-phase evaluator judged from at most five source titles, so it could not tell when a number or a quote was absent from the sources. The pass mark of 5 had never been compared with human judgment, and the tone-converted text that users actually see was not checked at all. Generation was capped at three attempts, but three retry paths underneath that cap had no bound.
+**Solution**: Split the Airflow batches in two: collection, body extraction and embedding run seven times a day, clustering and generation once. Agreed data formats, APIs and database storage rules with the team before implementation. Moved retries and parsing into a single unified LLM client.
 
-I set the direction, which was to work on the AI part first, and required design decisions to be recorded as ADRs. The agent added four things.
+**Result**: Two Airflow DAGs, one collecting seven times a day and one clustering and generating once a day. The retries added here had no upper bound; that was fixed in item 4.
 
-- Source check: compares the numbers and quotations in a draft with the full text of every article in the cluster, and has the draft rewritten when something is not in the sources. ADR 0010 compared a judge-only approach and an NLI-model approach and chose this rule-based check: it costs nothing per call, it is reproducible, and it can name the wrong value.
-- Post-conversion check: after tone conversion, looks for changed numbers and dates; if the change survives one re-conversion, the pre-conversion draft is saved.
-- New evaluator node: reads article excerpts. It has not been calibrated against human labels, so a scored fail is only recorded and the draft passes, while a failed evaluation blocks publication.
-- Retry bounds: the three retry paths that had no bound now have one, and tests check that each stops at its bound.
+---
 
-A number that is correct but does not appear literally in the sources, such as a computed total, is blocked too, which costs regenerations and published volume.
+## What I Did in the Solo Follow-up
 
-### 5. [Personal follow-up] Numbers I could not back up were withdrawn, and the README separates what was measured from what was not
+This is the work after the final team commit `ef7c176` (2026-02-10), ongoing on the fork since September 2026. An AI coding agent, Claude Code, did the implementation and researched the design options; I set the direction and the verification criteria.
 
-The recommendation response time and source diversity figures that I had written into the team README had no code in the repository that produced them, so I removed them. The agent re-evaluated the team's recommendation metric on the synthetic click archive the team left behind. Once inference was moved to a point before the answer window, so that clicks from the answer period could not leak into the recommendation, the metric dropped sharply, and I decided not to use it either.
+### 4. Source check — The LLM judge could not see the numbers and quotes in the sources
 
-To keep the same thing from happening on the LLM side, the metrics and the decision rule for the model comparison were committed as a pre-registration document while no results existed (ADR 0009). The primary metric is a human judgment of whether a newsletter is publishable. The README lists what has been measured, what has not been measured yet, and what was withdrawn.
+**Problem**: The team-phase evaluator judged from at most five source titles, so it could not tell when a number or quote was absent from the sources. The tone-converted version was never checked, and three retry paths beneath generation had no upper bound.
 
-The cost: I can no longer present the team-phase outcome with numbers.
+**Solution**: Added a rule-based check that compares the numbers and quotes in a draft with the full text of the cluster's articles and forces a rewrite when one is not in the sources. Chose it over an LLM-judge-only option and a natural language inference (NLI) model because it costs nothing, is reproducible and can point to the wrong value. Also added a check of numbers and dates after tone conversion and an upper bound on the three retry paths.
 
-## Results and verification
+**Result**: Caught all 500 synthetic cases where one number was scaled by 1.1, with 0 false positives on 494 numbers rewritten only in an equivalent notation. A test that runs the whole graph with a fake LLM confirms that when a number absent from the sources keeps appearing, three generations end with nothing saved.
 
-Table 1. Team-phase results.
+### 5. Withdrawn figures — The README carried numbers whose producing code no longer existed
 
-| Result | Conditions and how it was checked |
-| --- | --- |
-| At most three generation attempts per article cluster; if the third also fails, nothing is saved | Graph branches and settings at the final team commit. The judge is an LLM score from 0 to 10, pass at 5 or above |
-| Collection seven times a day, clustering and generation once a day | Schedules of the two Airflow DAGs at the final team commit. The generation DAG runs at 17:00, and that run starts again from collection |
+**Problem**: The recommendation response time and source diversity figures I had written into the team README had no producing code in the repository.
 
-In the team phase the LLM judged drafts against criteria we gave it, and a person read the results and adjusted the criteria and prompts little by little.
+**Solution**: Withdrew the figures I could not back up. Had the team's recommendation metrics re-evaluated on the synthetic click archive; once the inference time was moved earlier so that clicks from the answer period could not leak in, the metrics fell sharply, so they were left out as well. For the LLM model comparison, pre-registered the metrics and the decision rule before any result existed.
 
-Table 2. Follow-up results (implemented by an AI coding agent).
+**Result**: The fork README now lists separately what was measured, what has not been measured yet and what was withdrawn.
 
-| Result | Conditions and how it was checked |
-| --- | --- |
-| 500 of 500 cases where one number was scaled by 1.1 were caught | Excludes 15 cases where the changed value already appeared elsewhere |
-| 0 false positives on 494 numbers rewritten only in an equivalent notation | 14 of 494 before the causes found by this measurement were fixed; re-measured on the same 494 after the fix, 0 of 494 |
-| When a number absent from the sources keeps appearing, three generations are followed by zero saved newsletters | Graph-level test that runs the whole LangGraph flow with a fake LLM. Unit tests and pgvector integration tests run in CI on every push |
-| Three unbounded retry paths in the team-phase code fixed | The cluster-check path whose retry counter never increased and the judge-response parse path whose retry limit was effectively unlimited ([Jul 2026 review](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/blob/1a42b46c6efa93431e1dd0eb5fff0083ce14d914/docs/fix-log-2026-07.md)), plus the 429 and 5xx retry loop in the unified LLM client (Sep 2026 audit, [commit `e962deb`](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/commit/e962deb18695d648c83679bb36b835688e7a3f93)). Tests check that all three stop at their bound |
+---
 
-The first two rows were measured on synthetic perturbations of 401 newsletters from the team archive. No source articles remained, so each newsletter served as its own source; these figures therefore measure robustness to notation differences, not the block rate on real generated drafts.
+## Results
 
-## My scope and the team's scope
+| Item | Result | Conditions |
+| --- | --- | --- |
+| Generation flow, team phase | At most three attempts; a failing draft is not saved | Graph branches and settings at the final team commit |
+| Batch schedule, team phase | Collection 7 times a day, clustering and generation once | Two Airflow DAGs at the final team commit |
+| Source check, follow-up | 500 of 500 altered numbers caught; 0 of 494 false positives | Synthetic perturbations of 401 archived team newsletters |
+| Retry bounds, follow-up | Three unbounded retry paths fixed | Tests check that all three stop at their bound |
+
+---
+
+## More
+
+<details>
+<summary><b>My scope and the team's</b></summary>
 
 | Area | Owner |
 | --- | --- |
-| Overall architecture, data flow, module interfaces | Led by me. Data formats, APIs and database storage rules were agreed by the team |
+| Overall architecture, data flow, module interfaces | Led by me; formats and storage rules agreed by the team |
 | LangGraph generation and evaluation flow | Me |
-| RSS collection and body cleaning, BGE-M3 embedding, HDBSCAN clustering and second-stage split, newsletter writing, prompts and the unified LLM client | Me. The team README lists these areas under one teammate as well |
+| RSS collection and cleaning, embedding and clustering, newsletter writing and prompts, unified LLM client | Me; the team README lists one teammate as well |
 | Airflow batches, ERD design, planning | Shared between me and teammates |
-| Recommendation model (LightGBM, MMR), FastAPI backend and database setup, frontend and synthetic dataset | Teammates |
+| Recommendation model, FastAPI backend and database, frontend, synthetic dataset | Teammates |
 
-The role table in the team README (reproduced at the bottom of this page) lists crawling, clustering, newsletter writing, LLM and prompt work under both me and one teammate. Items 1 to 3 on this page cover the parts of that work that I designed and committed. The service as a whole, including recommendation and the UI, is a team result. In the anonymous peer feedback received after the project, all four teammates named clear communication and three named leadership as my strengths.
+The service as a whole, including recommendation and the UI, is a team result. In the anonymous peer review, all four teammates named clear communication as a strength and three named leadership. Everything up to the final team commit is team work and the 463 commits after it are my solo follow-up, so the boundary is in the Git history.
 
-I chose to continue on a fork of the team repository instead of starting a new one so that the team history stays intact. Everything up to the final team commit is team work and the 463 commits after it are the personal follow-up, so the boundary is visible in the Git history.
+</details>
 
-## Where AI coding agents were used
+<details>
+<summary><b>Where AI coding agents were used</b></summary>
 
-The follow-up (items 4 and 5) was implemented by Claude Code, an AI coding agent. That covers the code, tests and documents in the 463 commits after the final team commit; I set the direction and the verification criteria and decided whether to accept each result. What I did not accept: figures whose producing code no longer existed, and the recommendation metric that turned out to leak once re-evaluated. All of those commits are under my account, so the repository alone does not show the distinction, and I state it here. The July 2026 code review and its fix log of 26 entries (25 code changes) were also done with Claude Code, and in September four of those fixes were corrected and ported to the fork.
+- What the agent did: the code, tests and documents in the 463 commits after the final team commit; researching and proposing design options; the July 2026 code review
+- What I decided: the direction of putting the AI part first, continuing on the fork, having design decisions recorded as ADRs, withdrawing figures, and disclosing the use of an agent
+- How I checked: CI tests on every push, a test that runs the whole graph with a fake LLM, synthetic perturbation measurement
+- Technology added in the follow-up: an OpenAI-compatible LLM adapter (Gemini), Docker Compose, GitHub Actions
+- Items 1 to 3 are based on code committed to the team repository under my account. In January 2026 I also built a separate prototype of the same task with Codex to compare collection approaches
 
-- What the agent did: implemented code and tests, researched and proposed design options, wrote the design decision records and reports
-- What I decided: the direction (AI part first), continuing on the fork instead of a new repository, requiring design decisions to be recorded as ADRs, withdrawing numbers that could not be backed up, disclosing the use of agents
-- How results were checked: CI tests on every push, a test that runs the whole graph with a fake LLM, and the synthetic perturbation measurement. Pre-registered decision rules have so far been applied only to the recommendation experiments
+Every commit is under my account, so the repository alone does not show the split. That is why it is stated here.
 
-During the team phase, in January 2026, I had a coding agent (Codex) build a separate prototype of the same project and compared collection approaches. Items 1 to 3 describe the code committed under my account in the team repository.
+</details>
 
-## Limitations
+<details>
+<summary><b>Limitations</b></summary>
 
-- The service is not deployed. There are no real users and no real usage logs.
-- There are no human-labelled measurements of newsletter quality, factual accuracy or cluster split quality. In the team phase the judge was an LLM, with no fixed evaluation set and no human-written references. The pre-registered LLM model comparison has not been run yet.
-- The source check figures measure robustness to notation differences on synthetic perturbations; the block rate on real generated drafts has not been measured. The 0 of 494 false positives was re-measured on the same perturbation set in which the causes were found, so this figure cannot show whether the result would also be zero on notations the check has not seen. The check does not catch wrong dates or fabricated claims that contain no number, and under the default settings, where the evaluator only records, nothing blocks hallucinations other than numbers and quotes.
-- In the follow-up the generation job is switched off in the schedule, and there is no record of an end-to-end run on real data on main. The graph-level tests use a fake LLM.
-- The throughput and recommendation metrics written down in the team phase are not included here, because either nothing remains to show how they were produced or the evaluation method leaked. The thresholds of the second-stage split are hard-coded constants with no documented basis.
+- The service was never deployed. There are no real users and no usage logs
+- The follow-up generation job is switched off in the schedule, and there is no record of a full run on real data on main
+- No human-labeled measure of newsletter quality or cluster-split quality exists. In the team phase the judge was an LLM
+- The source-check figures measure robustness to notation differences, not the blocking rate on real output
+- The 500 caught cases exclude 15 where the changed value already appeared elsewhere. The 0 false positives were re-measured on the same 494 cases after the causes were fixed; before the fix there were 14
+- The check also blocks numbers that are not literally in the sources, such as a computed total, and misses fabricated claims that contain no date or number
+- The new evaluator node only records a fail, because it has not been calibrated against human labels. The pre-registered LLM model comparison has not been run yet
+- A cluster that fails three attempts, and the articles outside the largest sub-group, produce no newsletter in that run
+- Team-phase throughput and recommendation metrics are left out because their source is gone or the evaluation leaked. The second-stage split thresholds have no documented rationale either
 
-## What you can check
+</details>
 
-Team phase. Links are pinned to the final team commit `ef7c176`.
+<details>
+<summary><b>What you can check</b></summary>
 
-- [workflow/graph.py](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/blob/ef7c176c4f795aad0d70e1c63ebd026065f4cd1e/ai_workspace/workflow/graph.py): generation, evaluation and regeneration branches
-- [workflow/nodes.py](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/blob/ef7c176c4f795aad0d70e1c63ebd026065f4cd1e/ai_workspace/workflow/nodes.py) and [workflow/evaluators.py](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/blob/ef7c176c4f795aad0d70e1c63ebd026065f4cd1e/ai_workspace/workflow/evaluators.py): accumulated revision comments, ending without saving once the cap is reached, judging criteria and judge input
+- [Fork repository](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01): code, tests/, docs/adr/, CI tests on every push
+- [workflow/graph.py](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/blob/ef7c176c4f795aad0d70e1c63ebd026065f4cd1e/ai_workspace/workflow/graph.py): team-phase generation, evaluation and regeneration branches
+- [workflow/nodes.py](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/blob/ef7c176c4f795aad0d70e1c63ebd026065f4cd1e/ai_workspace/workflow/nodes.py), [workflow/evaluators.py](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/blob/ef7c176c4f795aad0d70e1c63ebd026065f4cd1e/ai_workspace/workflow/evaluators.py): accumulated comments, judging criteria
 - [core/clustering/split_v2.py](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/blob/ef7c176c4f795aad0d70e1c63ebd026065f4cd1e/ai_workspace/core/clustering/split_v2.py): second-stage split
-
-Personal follow-up. Links are pinned to fork main commit `1a42b46` (2026-10-06). The linked documents are written in Korean.
-
-- [ADR 0010](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/blob/1a42b46c6efa93431e1dd0eb5fff0083ce14d914/docs/adr/0010-faithfulness-gate-and-judge-v2.md): options, evidence and limits for the source check and the new evaluator. [Graph-level tests](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/blob/1a42b46c6efa93431e1dd0eb5fff0083ce14d914/tests/test_workflow_faithfulness_gates.py)
-- [ADR 0009](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/blob/1a42b46c6efa93431e1dd0eb5fff0083ce14d914/docs/adr/0009-llm-eval-protocol-and-preregistered-decision-rule.md): pre-registered LLM evaluation rules
-- [Re-evaluation report for the team recommendation metric](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/blob/1a42b46c6efa93431e1dd0eb5fff0083ce14d914/reports/recsys/team_repro_v2.md)
-- Scale of the work: 463 commits after the final team commit, 19 design decision records (17 accepted, 2 proposed), 22 merged PRs ([commit history](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/commits/1a42b46c6efa93431e1dd0eb5fff0083ce14d914)). 2026-09-25 to 2026-10-06, as of fork main commit `1a42b46`; the counts cover the whole repository, including the recommendation work. CI passes on this commit.
+- [ADR 0010](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/blob/1a42b46c6efa93431e1dd0eb5fff0083ce14d914/docs/adr/0010-faithfulness-gate-and-judge-v2.md): options, evidence and limits of the source check
+- [Graph-level tests](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/blob/1a42b46c6efa93431e1dd0eb5fff0083ce14d914/tests/test_workflow_faithfulness_gates.py): the whole LangGraph flow run with a fake LLM
+- [ADR 0009](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/blob/1a42b46c6efa93431e1dd0eb5fff0083ce14d914/docs/adr/0009-llm-eval-protocol-and-preregistered-decision-rule.md): pre-registered LLM evaluation rule
+- [Re-evaluation report on the team's recommendation metrics](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/blob/1a42b46c6efa93431e1dd0eb5fff0083ce14d914/reports/recsys/team_repro_v2.md): aggregate figures
+- [July 2026 review log](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/blob/1a42b46c6efa93431e1dd0eb5fff0083ce14d914/docs/fix-log-2026-07.md), [commit `e962deb`](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/commit/e962deb18695d648c83679bb36b835688e7a3f93): retry bound fixes
+- [Commit history](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/commits/1a42b46c6efa93431e1dd0eb5fff0083ce14d914): 463 commits after the final team commit, 19 design decision records, 22 merged PRs. These counts cover the whole repository, including the recommendation work
 - [Original team repository](https://github.com/boostcampaitech8/pro-recsys-finalproject-recsys-01)
 
-Not public. The collected article bodies are copyrighted by their publishers, so they appear neither in the repository nor on this page. The synthetic click archive used to re-evaluate the team recommendation metric is kept outside the repository, and the report contains aggregate figures only. The peer feedback itself is anonymous and is not reproduced.
+Team-phase links are pinned to the final team commit `ef7c176`, follow-up links to fork main commit `1a42b46` (2026-10-06), whose CI run passed. Article text, the synthetic click archive and the peer review responses are not included.
 
-## Team
+</details>
 
-Translated from the team table in the fork README. Names are given as they appear there.
+<details>
+<summary><b>Team</b></summary>
 
 | Name | Areas | GitHub |
 | --- | --- | --- |
@@ -174,3 +171,7 @@ Translated from the team table in the fork README. Names are given as they appea
 | 성승우 | Recommendation model, planning | [@sssseungu](https://github.com/sssseungu) |
 | 이선진 | Front end, back end, planning, synthetic dataset generation, database setup, ERD design, prototype implementation | [@Seonjin-13](https://github.com/Seonjin-13) |
 | 이효창 | Planning, crawling, clustering, newsletter writing, LLM, prompt engineering | [@hochang2](https://github.com/hochang2) |
+
+</details>
+
+---

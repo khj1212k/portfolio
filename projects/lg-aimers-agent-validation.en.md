@@ -1,28 +1,18 @@
 [한국어](./lg-aimers-agent-validation.md) | [English](./lg-aimers-agent-validation.en.md)
 
-# After the top local-validation combination dropped to 415 points on submission, I rebuilt validation to match real submission conditions and raised my exploration track from 783.78 to 983.26 points
+# LG Aimers 9th Hackathon — The top local-validation combination collapsed on real submission
 
-> In the LG Aimers 9th hackathon I delegated experiment design and implementation on my personal exploration track to AI coding agents and kept the submission thresholds and the stop decisions myself; two calibration signals verified there by real submissions were adopted in the team's final model.
+> LG Aimers 9th hackathon | Five-person team; GBDT models and features | Aug to Sep 2026
 
-## Overview
+The competition was to predict, for each pitch, the probability of successful pitch command from tabular baseball pitch and appearance-history data, and the evaluation data was the following season, which was not in the training data.
 
-| Item | Details |
-| --- | --- |
-| Period | Aug 2026 to Sep 2026 (online Phase 2, then the offline final, Phase 3, on 19 and 20 Sep 2026) |
-| Type | Team project. LG Aimers 9th hackathon (LG AI Research, operated on DACON), predicting the success probability of pitch command |
-| Team and my role | 5-person team; GBDT models and features. Alongside the team work, ran a personal exploration track with AI coding agents |
-| Tech | Python, Pandas, NumPy, CatBoost (used throughout feature engineering to find useful features), TabPFN (an experiment to check whether it could be applied), season-level walk-forward time-series cross-validation, AI coding agents (Claude Code, opencode, Codex) |
-| Headline result | Personal exploration track leaderboard score improved from 783.78 to 983.26 (experiments implemented by AI coding agents; submission thresholds and stop decisions were mine); two calibration signals adopted in the post-processing calibration of the team's final model. Team result: 17th of 1,030 teams in Phase 2, advancing to the final of 34 selected teams |
+On the team I owned the GBDT models and features, and on a personal exploration track that I ran alongside the team work I delegated experiment design and implementation to AI coding agents and set the submission thresholds and the stop decisions myself.
 
-## Problem
+I raised the personal exploration track from 783.78 to 983.26 points, and the team placed 17th of 1,030 teams and advanced to the final, for which 34 teams were selected.
 
-The task was to predict, for each pitch, the probability of command success from tabular data on baseball pitches and pitcher appearance history. Scores were based on the Brier Skill Score, and the evaluation data was the following season, which the training data did not cover.
+---
 
-On a 5-person team I was responsible for GBDT models and features, and alongside the team work I ran a personal exploration track with AI coding agents. On that track, changes that improved local validation kept lowering the score on actual submission, and the best score stayed at 783.78. The agents estimated that sampling variation alone produced a standard deviation of about 42 points on a validation fold of roughly 300,000 rows, while most of the gains being chased were 15 to 25 points, inside that range.
-
-## What I did and why
-
-The diagram shows the sequence from the drop to 415 points through to sharing with the team. Agents did the experiment design and implementation, the root-cause analysis and the validation design. I decided what to submit, when to stop, and the bar for anything going into the team's code. Of three agent judgments, I rejected two (that 1,100 points was unrealistic, and the estimated overlap with team code) and accepted one as it was, which scored 415.
+## What I Did
 
 ```mermaid
 flowchart TD
@@ -41,90 +31,106 @@ flowchart TD
     L --> M[All four rejected and logged in a PR]
 ```
 
-### 1. I used the leaderboard to rebut the agent's judgment that 1,100 points was unrealistic
+The sequence from the drop to sharing with the team.
 
-While the score sat in the 700s, the agent called the 1,100-point target unrealistic and kept repeating parameter tuning. I did not accept that, because many teams on the leaderboard were already above 1,000. If other teams had reached that score, we had simply not found the method yet. So I had the tuning loop stopped and had the agents go back to the data and the baseball domain to look for features. The cost was a much larger pool of feature candidates, each of which had to be screened by local validation.
+### 1. Direction of exploration — The agent judged 1,100 points to be unrealistic
 
-### 2. When the top local-validation combination dropped to 415 points, I stopped every experiment and had the cause written up first
+**Problem**: With the score stuck in the 700s, the agent called the 1,100-point target unrealistic and kept repeating parameter tuning.
 
-I submitted the combination the agent recommended as the best in local validation, and the score dropped to 415. Its key feature had shown the largest validation gain up to then and had passed the agent's leakage checks. I took that validation score at face value and decided to submit. 415 was the lowest score of any submission so far, so I stopped all experiments and had the results up to that point written up as a report.
+**Solution**: Rebutted the judgment on the grounds that many teams on the leaderboard were above 1,000 points. Stopped the tuning loop and had the agent go back to the data and the baseball domain to look for features.
 
-The agent's analysis traced the cause to the validation method. During validation, a feature reflecting recent performance kept being updated with the outcomes of earlier pitches inside the validation season. The real evaluation was a new season in which those outcomes are unknown, so the feature lost its meaning once the season changed. Information from the evaluation period had leaked into the feature and inflated only the validation score. Stopping meant discarding the combination with the highest validation score and halting the follow-up experiments that were being prepared.
+**Result**: Feature candidates grew sharply, and the work moved to screening each one with local validation.
 
-### 3. I rebuilt validation with the agents to match real submission conditions and submitted only versions that passed
+### 2. Stopping the experiments — The top local-validation combination dropped to 415 points
 
-With the agents, I rebuilt validation so that it used only information available at real submission time. This was the approach the agent's root-cause report had proposed as the next step. Records were frozen at the end of the previous season, and settings chosen on one season were applied unchanged to the next season to measure the score. A change counted as an improvement only if the score measured this way rose by more than about 42 points in both validation seasons.
+**Problem**: I trusted the combination the agent recommended as best in local validation and submitted it as it was. It had passed the leakage checks too, yet it scored lower than anything submitted before.
 
-I submitted only versions that passed this validation and checked their scores myself. The version with a season-boundary correction scored 960.18, and the version that added a renewal signal built from appearance history scored 983.26. The recent-performance features that had shown the largest gain under the old validation were left out. When a combination containing them was later re-measured under the new validation, it lost in both seasons.
+**Solution**: Stopped every experiment and had the results so far written up as a report.
 
-### 4. After the rule-violation notice, I put a row-independence audit of five submission packages ahead of performance work
+**Result**: The agent's analysis traced the cause to the validation method. In validation, a feature built from recent performance kept being updated with the outcomes of earlier pitches inside the validation season; the real evaluation was a new season where those outcomes were unknown.
 
-The organizers announced that rule violations were increasing. A prediction for one evaluation row that referred to other evaluation rows could lead to disqualification. A higher score is unusable if it breaks the rules, so I decided that the submission packages already built had to be checked before any more performance work. I gave the agent the text of the notice and had it audit five submission packages for row independence. The audit compared predictions when the official sample rows were fed one at a time, all together, in shuffled order, and with unrelated rows added, and all five packages passed. Performance work resumed only after I confirmed that, and directions that carry information between evaluation rows were dropped from the candidate list.
+### 3. Rebuilding validation — Changes that helped in validation lowered the submitted score
 
-### 5. I set the bar that only measured gains on the team's submission path go into team code, and rejected four candidates
+**Problem**: Changes that improved local validation kept lowering the score on real submission. The gains being chased were mostly 15 to 25 points, inside the roughly 42-point standard deviation the agent estimated for sampling variation alone.
 
-The personal track scored lower than the team's model. The agent's estimate was that the personal track's techniques overlapped with the team's code. Instead of relying on the estimate, I had the two compared directly and set the bar that a candidate missing from the team's code goes in only if it shows a gain when measured on the team's submission path. Four feature candidates lost in both validation periods and were not merged, and the results were recorded in a PR so the same experiments would not be repeated. No feature entered the team's code from this review.
+**Solution**: Rebuilt validation with the agents so that it uses only information available at real submission time. Froze the records up to the previous season and scored each season with settings fixed on the season before it. Submitted, myself, only versions that gained more than about 42 points in both validation seasons.
 
-The two calibration signals verified by real submissions were shared with the team as a design document and a notebook, and a teammate adopted them as inputs to the final model's post-processing probability calibration.
+**Result**: Scored 960.18 with the season-boundary correction, and 983.26 after adding the renewal signal built from appearance history.
 
-## Results and verification
+### 4. Row-independence audit — The organizers announced that rule violations were increasing
 
-| What | Value | Condition |
+**Problem**: A prediction for one evaluation row that referred to other evaluation rows could mean disqualification. A higher score is unusable if it breaks the rules.
+
+**Solution**: Decided to check the submission packages before any further performance work. Gave the agent the text of the notice and had it audit five submission packages for row independence. The audit compared predictions when the official sample rows were fed one at a time, all at once, in shuffled order, and with unrelated rows added.
+
+**Result**: All five passed. Dropped any approach that carries information between evaluation rows.
+
+### 5. Bar for team code — The agent assumed my track's techniques overlapped with the team's code
+
+**Problem**: My track's score was below the team model's, and the agent assumed its techniques overlapped with the team's code.
+
+**Solution**: Had the agent compare against the team's code directly instead of assuming. Set the bar that a candidate missing from the team's code goes in only if it shows a measured gain on the team's submission path.
+
+**Result**: Rejected four feature candidates, which lost in both validation periods, and logged the result in a PR. A teammate adopted the two calibration signals verified by real submissions for the post-processing probability calibration of the final model.
+
+---
+
+## Results
+
+| Item | Result | Conditions |
 | --- | --- | --- |
-| Best personal-track score before validation was fixed | 783.78 | Competition leaderboard score on submission (based on the Brier Skill Score) |
-| Top local-validation combination | 415.04 | Same leaderboard; the combination recommended by the agent, as submitted |
-| Season-boundary correction version | 960.18 | Same leaderboard; submitted after passing the new validation |
-| Version with the renewal signal added | 983.26 | Same leaderboard; the version above plus a signal built from appearance history. Best personal-track score |
-| Row-independence audit | All 5 passed | Five personal-track submission packages, after the rule-violation notice, compared on the official sample rows |
-| Feature candidates for the team | All 4 rejected | Measured on the team's submission path; a loss in both validation periods |
-| Calibration signals | 2 adopted | Post-processing probability calibration of the team's final submitted model |
-| Team result, Phase 2 online | 17th of 1,030 teams, 1,184.98 points | Team's final submission, public DACON leaderboard |
-| Team result, reaching the final | 34 teams selected | Phase 3 offline final (19 and 20 Sep 2026) |
+| Personal exploration track | 783.78 to 983.26 points | Leaderboard scores from my own submissions; based on the Brier Skill Score |
+| Row-independence audit | All five submission packages passed | After the rule-violation notice; compared on the official sample rows |
+| Carried into the team model | Two calibration signals adopted, four feature candidates rejected | Adopted for post-processing calibration of the final model; rejected after measurement on the team's submission path |
+| Team result | 17th of 1,030 teams; advanced to the final of 34 selected teams | Phase 2 online, public DACON leaderboard |
 
-All four personal-track scores are scores I received by submitting to the same competition leaderboard. The team's rank and score can be checked on the public DACON leaderboard. The audit and rejection results are kept in reports written by the agents, and I confirmed each pass and each rejection.
+---
 
-## My scope and the team's scope
+## More
 
-What I owned
+<details>
+<summary><b>My scope and the team's</b></summary>
 
-- GBDT models and features
-- Running the personal exploration track: delegating experiments to agents and deciding the submission threshold score and whether each track continued or stopped
-- Verifying the season-boundary correction and the renewal signal by real submissions, and sharing the design document and notebook, written with agents, with the team
-- Handing over two sets of predictions and the inference code for the team merge (extraction and the match check were done by an agent)
-- The decision to run the row-independence audit before performance work, and confirming that it passed
-- The six EDA and feature slides of the final presentation (written with agents, then corrected against the final submission notebook)
+- Mine: the GBDT models and features, running the personal exploration track, verifying the two calibration signals by real submission and sharing them with the team
+- Handed to the team: two sets of predictions for the team merge with the inference code, and the six EDA and feature slides in the final presentation
+- Teammates: composing and combining the team's final submitted model, deciding the merge specification, deciding to adopt the calibration signals
+- The ranking and the place in the final are team results from the team's final model
+- Tech: Python, Pandas, NumPy, CatBoost, season-level walk-forward time-series cross-validation. TabPFN was only checked for feasibility
 
-What teammates owned
+</details>
 
-- The composition and blending of the team's final submitted model, and the team's final submission. The 17th place among 1,030 teams and the place in the final are team results obtained with this model
-- The merge specification, and the decision to adopt the two calibration signals in the final model's post-processing
-
-## Where AI coding agents were used
-
-On the personal exploration track I split the work into tracks and gave them to Claude Code and opencode to run in parallel. In the final, I set up a structure in which a root agent assigned experiments, validation and submission to Codex workers.
+<details>
+<summary><b>Where AI coding agents were used</b></summary>
 
 | Work | What the agents did | What I decided and checked |
 | --- | --- | --- |
-| Personal exploration track experiments | Experiment design and implementation per track, local validation, result reports | Submission threshold score, continuing or stopping each track, the actual submissions and score checks |
-| Direction of exploration | The judgment that the 1,100-point target was unrealistic; repeated parameter tuning | Rebuttal based on the leaderboard; the demand for domain-based feature discovery |
-| The drop to 415 | Recommending the top local-validation combination and running the leakage checks; after the stop, the results report and root-cause analysis | The decision to submit, stopping all experiments, ordering the report |
-| Rebuilding validation | Proposing, designing and implementing validation on frozen records; the threshold of about 42 points; implementing the calibration signals | Making a pass on the new validation the condition for submission; submitting only versions that passed and checking their scores |
-| Rule compliance | The row-independence audit of five submission packages, working from the text of the notice | The decision to audit before performance work; confirming the pass |
-| Sharing with the team | The comparison with team code, measuring four candidates on the team's submission path, writing the design document and notebook, extracting two sets of predictions and the inference code, verifying they were bit-identical to the original predictions | The bar of merging only measured gains, rejecting the four candidates, the condition that saved outputs be used first with no retraining |
-| Presentation | Writing the six EDA and feature slides | Having them checked against the final submission notebook and correcting outdated content such as the feature count and the success rate |
-| Final | A root agent assigning experiments, validation and submission to Codex workers | Setting up that structure; judging the Player metric, where rankings separated, to be the bottleneck and reassigning agents to it |
+| Personal track experiments | Experiment design and implementation, local validation, result reports | Submission threshold, continue or stop, the actual submissions |
+| The drop and the new validation | Recommending the combination, root-cause analysis, designing and implementing the new validation | Deciding to submit, stopping everything, making a pass on the new validation the condition for submission |
+| Rule compliance | Row-independence audit of five submission packages | Auditing before performance work; confirming the pass |
+| Sharing with the team | Comparison with team code, measuring four candidates, the design document and notebook, extracting the predictions | Merging only measured gains; rejecting the four |
+| Presentation and final | Writing the six EDA and feature slides; experiments, validation and submission in the final | Having the slides checked against the final submission notebook; reassigning agents to the Player metric |
 
-The code, experiment logs, root-cause report, deliverables handed to the team and presentation slides of the personal exploration track were written by agents. Of the agents' judgments, I rejected the one that 1,100 points was unrealistic, had the estimated overlap with team code checked by comparison and measurement, and accepted the recommendation of the top local-validation combination as it was, which scored 415.
+Of the agents' three judgments, I rejected two (that 1,100 points was unrealistic, and that my track overlapped with the team's code) and accepted the third, the top local-validation recommendation, as it was, which led to the drop. On the personal track I split the work between Claude Code and opencode; in the final I set up a root agent that assigned work to Codex workers.
 
-## Limitations
+</details>
 
-- The personal-track scores are the scores returned at submission, as kept in the experiment log. The public leaderboard shows only the team's final score and rank.
-- The new validation did not fully predict real scores either. The renewal signal showed a minimum gain of +46.96 points across the two past validation seasons but +23.08 on actual submission, and those two seasons were also used while developing the signal's structure. Another version that passed the new validation and was submitted ended at practically the same score as the season-boundary correction version.
-- The combination that scored 415 bundled several features, and their individual effects were not separated by submitting them on their own.
-- The personal track's best score of 983.26 is below the team's final score of 1,184.98. The 17th place is the result of the team's final model.
-- The final (Phase 3) used a different metric (Pitch 70%, Player 30%).
+<details>
+<summary><b>Limitations</b></summary>
 
-## What you can check
+- Personal-track scores are the scores received on submission, as kept in my experiment log. The public leaderboard shows only the team's score and rank
+- The new validation did not fully predict real scores either. The renewal signal gained at least +46.96 points in validation and +23.08 on real submission, and the two validation seasons had also been used to develop the signal
+- The combination that dropped contained several features together, and their individual effects were not separated
+- The best personal-track score is below the team's final score of 1,184.98 points
+- The final used a different metric (Pitch 70%, Player 30%)
 
-- [LG Aimers 9th Phase 2 online hackathon leaderboard (DACON, page in Korean)](https://dacon.io/competitions/official/236743/leaderboard): the 17th row of the overall ranking, final score 1,184.97753
-- The code, experiment logs, and audit and rejection reports are private. Competition rules do not allow the competition data or source code to be shared outside the team, so this document consists only of prose and a redrawn diagram.
+</details>
+
+<details>
+<summary><b>What you can check</b></summary>
+
+- [DACON Phase 2 leaderboard](https://dacon.io/competitions/official/236743/leaderboard): the team's row, final score 1,184.97753
+- Code, experiment logs, and the audit and rejection reports are private under competition rules. This page is prose and a redrawn diagram only
+
+</details>
+
+---
