@@ -32,7 +32,7 @@ Headline figures and the conditions under which they were measured.
 
 Other work
 
-- VisuAI (Dec 2022 to Jan 2023, 3-person team): a walking-assistance web app that detects obstacles with the phone camera and announces them by voice. We fine-tuned YOLOv5-nano and converted it to TensorFlow.js to run in the browser.
+- VisuAI (Dec 2022 to Jan 2023, 3-person team): a walking-assistance web app that detects obstacles with the phone camera and announces them by voice. We fine-tuned YOLOv5-nano and converted it to TensorFlow.js to run in the browser. [Repository](https://github.com/khj1212k/VisuAl_web)
 
 ## Reading order
 
