@@ -18,6 +18,8 @@ When I hand implementation to AI coding agents, I still set the direction and th
 
 > Trip.com Content Center | Intern, sole owner of Korean data | Nov 2024 to Feb 2025
 
+<p><img src="./assets/tripcom-coverage.en.svg" alt="Bar chart showing Korean coverage of 9,755 attractions in China rated 4.0 or higher rising from 72.3% in Nov 2024 to 100% in Feb 2025" width="640"></p>
+
 **Problem**: I was doing every Korean translation myself, one attraction at a time. Only 72.3% of the attractions in China rated 4.0 or higher had Korean information.
 
 **Solution**: Proposed building an LLM translation pipeline in an internal document. Compared five LLMs on identical inputs to choose a model. Designed the prompt template and a review rule: check first the fields where an error harms a traveler.
@@ -29,6 +31,8 @@ When I hand implementation to AI coding agents, I still set the direction and th
 ### LangGraph Newsletter Generation — One-pass drafts mixed separate events and still hallucinated
 
 > Boostcamp AI Tech 8th final project | Leader of a five-person team, then solo follow-up | Jan to Feb 2026
+
+<p><img src="./assets/newsletter-flow.en.svg" alt="Flow diagram: a newsletter is generated and then evaluated on missing key facts, structure and hallucination; a pass is saved, a fail goes back to generation with the accumulated comments, generation is capped at three attempts, and a draft that fails the third attempt is not saved" width="640"></p>
 
 **Problem**: When an LLM wrote a newsletter from a cluster of articles in one pass, separate events ended up in the same issue. Prompt tuning alone could not reliably prevent hallucination or missing key facts.
 
@@ -42,6 +46,8 @@ When I hand implementation to AI coding agents, I still set the direction and th
 
 > LG Aimers 9th hackathon | Five-person team; GBDT models and features | Aug to Sep 2026
 
+<p><img src="./assets/lg-aimers-score.en.svg" alt="Bar chart of personal exploration track submission scores: 415 points when the top local-validation combination was submitted, and a rise from 783.78 to 983.26 points after adding two calibration signals; separately, the team placed 17th of 1,030 teams and advanced to the final of 34 selected teams" width="640"></p>
+
 **Problem**: On a personal exploration track that I ran with AI coding agents alongside the team work, the combination that ranked first in local validation dropped to 415 points when submitted.
 
 **Solution**: Stopped every experiment and had the cause written up first. Rebuilt validation with the agents to match real submission conditions, and submitted only the versions that passed.
@@ -53,6 +59,8 @@ When I hand implementation to AI coding agents, I still set the direction and th
 ### Person Re-identification with a Vision-Language Model — Whether a VLM could do it had to be tested
 
 > Fudan University graduation thesis | Individual research | Mar to May 2025
+
+<p><img src="./assets/reid-accuracy.en.svg" alt="Bar chart: same-person accuracy on Market-1501 is 97.05% with full fine-tuning and 82.45% with LoRA rank 8; Person Search ID accuracy on CUHK-SYSU is 71.76% for the base model and 78.57% with the two-stage transfer" width="640"></p>
 
 **Problem**: Whether a vision-language model could be used for person re-identification had to be tested by experiment. The GPU budget was limited: training all of a 7B model took two to three hours per epoch.
 

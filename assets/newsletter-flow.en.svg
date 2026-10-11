@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 276" width="720" height="276" role="img" aria-labelledby="t d" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif">
+<title id="t">Newsletter generation and evaluation flow</title>
+<desc id="d">Flow diagram: a newsletter is generated and then evaluated on missing key facts, structure and hallucination; a pass is saved, a fail goes back to generation with the accumulated comments, generation is capped at three attempts, and a draft that fails the third attempt is not saved</desc>
+<rect x="0.5" y="0.5" width="719" height="275" rx="8" fill="#ffffff" stroke="#d0d7de"/>
+<text x="24" y="40" font-size="17" font-weight="600" fill="#24292f" text-anchor="start">Newsletter generation and evaluation flow</text>
+<rect x="24" y="100" width="200" height="68" rx="6" fill="#f6f8fa" stroke="#d0d7de" stroke-width="1"/>
+<text x="124" y="129.9" font-size="15" font-weight="600" fill="#24292f" text-anchor="middle">Generate newsletter</text>
+<text x="124" y="148.9" font-size="13" font-weight="400" fill="#57606a" text-anchor="middle">at most three attempts</text>
+<rect x="270" y="100" width="220" height="68" rx="6" fill="#f6f8fa" stroke="#0969da" stroke-width="1.5"/>
+<text x="380" y="121.4" font-size="15" font-weight="600" fill="#24292f" text-anchor="middle">Evaluate</text>
+<text x="380" y="140.4" font-size="13" font-weight="400" fill="#57606a" text-anchor="middle">missing key facts,</text>
+<text x="380" y="157.4" font-size="13" font-weight="400" fill="#57606a" text-anchor="middle">structure, hallucination</text>
+<rect x="556" y="112" width="140" height="44" rx="6" fill="#f6f8fa" stroke="#d0d7de" stroke-width="1"/>
+<text x="626" y="139.4" font-size="15" font-weight="600" fill="#24292f" text-anchor="middle">Saved</text>
+<rect x="556" y="182" width="140" height="44" rx="6" fill="#f6f8fa" stroke="#d0d7de" stroke-width="1"/>
+<text x="626" y="209.4" font-size="15" font-weight="600" fill="#24292f" text-anchor="middle">Not saved</text>
+<path d="M224,134 L263,134" fill="none" stroke="#57606a" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="270,134 263,130 263,138" fill="#57606a"/>
+<path d="M490,134 L549,134" fill="none" stroke="#57606a" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="556,134 549,130 549,138" fill="#57606a"/>
+<text x="523" y="126" font-size="13" font-weight="400" fill="#57606a" text-anchor="middle">pass</text>
+<path d="M380,100 L380,78 L124,78 L124,93" fill="none" stroke="#57606a" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="124,100 120,93 128,93" fill="#57606a"/>
+<text x="252" y="70" font-size="13" font-weight="400" fill="#57606a" text-anchor="middle">fail: comments accumulate, generate again</text>
+<path d="M380,168 L380,204 L549,204" fill="none" stroke="#57606a" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="556,204 549,200 549,208" fill="#57606a"/>
+<text x="468" y="196" font-size="13" font-weight="400" fill="#57606a" text-anchor="middle">third attempt fails</text>
+<text x="24" y="256" font-size="13" font-weight="400" fill="#57606a" text-anchor="start">Team-phase generation flow; graph branches and settings at the final team commit</text>
+</svg>

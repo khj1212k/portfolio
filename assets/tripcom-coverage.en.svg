@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 220" width="720" height="220" role="img" aria-labelledby="t d" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif">
+<title id="t">Korean coverage of attractions</title>
+<desc id="d">Bar chart showing Korean coverage of 9,755 attractions in China rated 4.0 or higher rising from 72.3% in Nov 2024 to 100% in Feb 2025</desc>
+<rect x="0.5" y="0.5" width="719" height="219" rx="8" fill="#ffffff" stroke="#d0d7de"/>
+<text x="24" y="40" font-size="17" font-weight="600" fill="#24292f" text-anchor="start">Korean coverage of attractions</text>
+<text x="24" y="88" font-size="14" font-weight="600" fill="#24292f" text-anchor="start">Attractions in China rated 4.0 or higher with Korean information</text>
+<line x1="191.5" y1="95" x2="191.5" y2="161" stroke="#d0d7de" stroke-width="1"/>
+<text x="24" y="116" font-size="14" font-weight="400" fill="#57606a" text-anchor="start">Nov 2024</text>
+<path d="M192,99 H496 A4,4 0 0 1 500,103 V119 A4,4 0 0 1 496,123 H192 Z" fill="#8c959f"/>
+<text x="508" y="116.5" font-size="15" font-weight="600" fill="#24292f" text-anchor="start">72.3%</text>
+<text x="24" y="150" font-size="14" font-weight="400" fill="#57606a" text-anchor="start">Feb 2025</text>
+<path d="M192,133 H614 A4,4 0 0 1 618,137 V153 A4,4 0 0 1 614,157 H192 Z" fill="#0969da"/>
+<text x="626" y="150.5" font-size="15" font-weight="600" fill="#24292f" text-anchor="start">100%</text>
+<text x="24" y="187" font-size="13" font-weight="400" fill="#57606a" text-anchor="start">9,755 attractions; Nov 2024 vs. Feb 2025</text>
+</svg>

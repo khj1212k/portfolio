@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 296" width="720" height="296" role="img" aria-labelledby="t d" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif">
+<title id="t">Vision-language model fine-tuning results</title>
+<desc id="d">Bar chart: same-person accuracy on Market-1501 is 97.05% with full fine-tuning and 82.45% with LoRA rank 8; Person Search ID accuracy on CUHK-SYSU is 71.76% for the base model and 78.57% with the two-stage transfer</desc>
+<rect x="0.5" y="0.5" width="719" height="295" rx="8" fill="#ffffff" stroke="#d0d7de"/>
+<text x="24" y="40" font-size="17" font-weight="600" fill="#24292f" text-anchor="start">Vision-language model fine-tuning results</text>
+<text x="24" y="75" font-size="14" font-weight="600" fill="#24292f" text-anchor="start">Same-person accuracy, Market-1501</text>
+<line x1="191.5" y1="82" x2="191.5" y2="148" stroke="#d0d7de" stroke-width="1"/>
+<text x="24" y="103" font-size="14" font-weight="400" fill="#57606a" text-anchor="start">Full fine-tuning</text>
+<path d="M192,86 H601.43 A4,4 0 0 1 605.43,90 V106 A4,4 0 0 1 601.43,110 H192 Z" fill="#0969da"/>
+<text x="613.43" y="103.5" font-size="15" font-weight="600" fill="#24292f" text-anchor="start">97.05%</text>
+<text x="24" y="137" font-size="14" font-weight="400" fill="#57606a" text-anchor="start">LoRA rank 8</text>
+<path d="M192,120 H539.24 A4,4 0 0 1 543.24,124 V140 A4,4 0 0 1 539.24,144 H192 Z" fill="#8c959f"/>
+<text x="551.24" y="137.5" font-size="15" font-weight="600" fill="#24292f" text-anchor="start">82.45%</text>
+<text x="24" y="177" font-size="14" font-weight="600" fill="#24292f" text-anchor="start">Person Search ID accuracy, CUHK-SYSU</text>
+<line x1="191.5" y1="184" x2="191.5" y2="250" stroke="#d0d7de" stroke-width="1"/>
+<text x="24" y="205" font-size="14" font-weight="400" fill="#57606a" text-anchor="start">Base model</text>
+<path d="M192,188 H493.7 A4,4 0 0 1 497.7,192 V208 A4,4 0 0 1 493.7,212 H192 Z" fill="#8c959f"/>
+<text x="505.7" y="205.5" font-size="15" font-weight="600" fill="#24292f" text-anchor="start">71.76%</text>
+<text x="24" y="239" font-size="14" font-weight="400" fill="#57606a" text-anchor="start">Two-stage transfer</text>
+<path d="M192,222 H522.71 A4,4 0 0 1 526.71,226 V242 A4,4 0 0 1 522.71,246 H192 Z" fill="#0969da"/>
+<text x="534.71" y="239.5" font-size="15" font-weight="600" fill="#24292f" text-anchor="start">78.57%</text>
+<text x="24" y="276" font-size="13" font-weight="400" fill="#57606a" text-anchor="start">LLaVA-Interleave-Qwen-7B; full fine-tuning 1 epoch, LoRA 5 epochs; final thesis values</text>
+</svg>

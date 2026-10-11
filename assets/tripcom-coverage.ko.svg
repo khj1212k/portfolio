@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 220" width="720" height="220" role="img" aria-labelledby="t d" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif">
+<title id="t">관광지 한국어 커버리지</title>
+<desc id="d">평점 4.0 이상 중국 관광지 9,755곳의 한국어 커버리지가 2024.11의 72.3%에서 2025.02의 100%가 된 것을 보여 주는 막대 그래프</desc>
+<rect x="0.5" y="0.5" width="719" height="219" rx="8" fill="#ffffff" stroke="#d0d7de"/>
+<text x="24" y="40" font-size="17" font-weight="600" fill="#24292f" text-anchor="start">관광지 한국어 커버리지</text>
+<text x="24" y="88" font-size="14" font-weight="600" fill="#24292f" text-anchor="start">평점 4.0 이상 중국 관광지 가운데 한국어 정보가 있는 곳</text>
+<line x1="135.5" y1="95" x2="135.5" y2="161" stroke="#d0d7de" stroke-width="1"/>
+<text x="24" y="116" font-size="14" font-weight="400" fill="#57606a" text-anchor="start">2024.11</text>
+<path d="M136,99 H480.49 A4,4 0 0 1 484.49,103 V119 A4,4 0 0 1 480.49,123 H136 Z" fill="#8c959f"/>
+<text x="492.49" y="116.5" font-size="15" font-weight="600" fill="#24292f" text-anchor="start">72.3%</text>
+<text x="24" y="150" font-size="14" font-weight="400" fill="#57606a" text-anchor="start">2025.02</text>
+<path d="M136,133 H614 A4,4 0 0 1 618,137 V153 A4,4 0 0 1 614,157 H136 Z" fill="#0969da"/>
+<text x="626" y="150.5" font-size="15" font-weight="600" fill="#24292f" text-anchor="start">100%</text>
+<text x="24" y="187" font-size="13" font-weight="400" fill="#57606a" text-anchor="start">관광지 9,755곳, 2024.11과 2025.02 비교</text>
+</svg>
