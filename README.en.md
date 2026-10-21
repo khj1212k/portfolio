@@ -22,7 +22,7 @@ When I hand implementation to AI coding agents, I still set the direction and th
 
 **Problem**: I was doing every Korean translation myself, one attraction at a time. Only 72.3% of the attractions in China rated 4.0 or higher had Korean information.
 
-**Solution**: Proposed building an LLM translation pipeline in an internal document. Compared five LLMs on identical inputs to choose a model. Designed the prompt template and a review rule: check first the fields where an error harms a traveler.
+**Solution**: Proposed building an LLM translation pipeline in an internal document. Compared five LLMs on identical inputs to choose a model. Designed the prompt template and a review rule: check high-risk fields such as opening hours, addresses and place names first.
 
 **Result**: Raised Korean coverage of 9,755 attractions from 72.3% to 100%. Documented the prompt template and review criteria and shared them with the English, Japanese and Thai owners.
 

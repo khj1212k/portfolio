@@ -6,7 +6,7 @@
 
 I owned the Korean attraction (POI) data, and I was translating it myself, one entry at a time.
 
-Nobody had asked for AI, but looking at the task I judged that an LLM would get it done far faster and more efficiently. So I proposed building an LLM translation pipeline in an internal document, and it went on to be applied in practice.
+Looking at the task I had been given, I judged that an LLM would get it done far faster and more efficiently. So I proposed building an LLM translation pipeline in an internal document, and it went on to be applied in practice.
 
 Korean coverage of the 9,755 attractions rated 4.0 or higher went from 72.3% to 100%.
 
@@ -32,9 +32,9 @@ flowchart TD
     G --> H["English Japanese and Thai owners"]
 ```
 
-### 1. Proposal — Nobody had asked for AI
+### 1. Proposal — Translating one entry at a time left coverage at 72.3%
 
-**Problem**: Nobody had asked for AI. The task I had been given was one an LLM could finish far faster and more efficiently.
+**Problem**: With translation done one entry at a time, Korean coverage of attractions rated 4.0 or higher stood at 72.3%. Looking at the task, it was work an LLM could finish far faster and more efficiently.
 
 **Solution**: Proposed building an LLM translation pipeline in a written internal plan. Backed it with coverage by rating band, error examples from the existing translations, and translation comparisons with and without a prompt and across several LLMs. Included a fallback that could run even if API access was not approved.
 
@@ -50,9 +50,9 @@ flowchart TD
 
 ### 3. Review order — Thousands of entries could not all be reviewed
 
-**Problem**: Travelers act on attraction data exactly as written. A wrong place name, address or opening time means a wasted trip, yet a person could not review thousands of entries one by one.
+**Problem**: The LLM drafts ran to thousands of entries, too many for a person to review one by one. The review needed an order.
 
-**Solution**: Set the rule of reviewing first the fields where an error harms a traveler. Checked these first: opening hours, where an error leaves the traveler at a closed door, and addresses, place names and facility names, where an error sends them to the wrong place.
+**Solution**: Set the rule of reviewing high-risk fields first. Checked opening hours, addresses, place names and facility names first.
 
 **Result**: Applied to the Korean work as a review that checks high-risk fields first. Reviewed new attractions against the same criteria.
 
