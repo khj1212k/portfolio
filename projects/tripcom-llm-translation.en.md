@@ -46,7 +46,7 @@ flowchart TD
 
 **Solution**: Gave the same attraction data to ChatGPT, Claude, Perplexity, DeepSeek and Kimi and compared them on four criteria: accuracy, fluency, proper-noun handling and format compliance. Ran the comparison by hand in each service's web interface.
 
-**Result**: Used the errors on identical inputs as the basis for the model choice. In the comparison recorded in the plan, Kimi and Perplexity made more translation errors than ChatGPT.
+**Result**: Compared five LLMs on the same inputs and shared criteria and used that as the basis for the model choice.
 
 ### 3. Review order — Thousands of entries could not all be reviewed
 
@@ -79,7 +79,7 @@ flowchart TD
 | Item | Result | Conditions |
 | --- | --- | --- |
 | Korean coverage | 72.3% to 100% | 9,755 attractions in China rated 4.0 or higher; Nov 2024 vs. Feb 2025 |
-| LLM comparison | Kimi and Perplexity made more errors than ChatGPT | Comparison recorded in the plan; same inputs; services as of the internship |
+| LLM comparison | Compared ChatGPT, Claude, Perplexity, DeepSeek and Kimi to ground the model choice | Same inputs; in each web interface; services as of the internship |
 | Multilingual rollout | Prompt template and review criteria shared with three language owners and applied together | Shared after validation on the Korean work |
 
 ---

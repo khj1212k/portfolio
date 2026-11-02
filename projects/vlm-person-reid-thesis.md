@@ -36,7 +36,7 @@ flowchart TB
     D -- "LoRA 가중치" --> I
 ```
 
-학습은 공개 프레임워크 lmms-finetune을 fork해 PyTorch, Hugging Face Transformers, PEFT, DeepSpeed로 Alibaba Cloud GPU에서 했습니다.
+학습은 공개 프레임워크 lmms-finetune을 fork해 PyTorch, Hugging Face Transformers, PEFT, DeepSpeed로 임대한 클라우드 GPU에서 했습니다.
 
 ### 1. 과제 변환 — 모델은 두 이미지의 인물을 비교해 본 적이 없었다
 
@@ -56,7 +56,7 @@ flowchart TB
 
 ### 3. 학습 오류 — 오류 세 가지가 겹쳐 원인을 구분하기 어려웠다
 
-**문제**: 멀티 GPU 설정 오류, 이미지 토큰 수 불일치, DeepSpeed의 sparse attention 충돌이 겹쳐 나와 어느 것이 원인인지 구분하기 어려웠다.
+**문제**: 멀티 GPU 설정 오류, 이미지 토큰 수 불일치, DeepSpeed의 CUDA 버전 불일치가 겹쳐 나와 어느 것이 원인인지 구분하기 어려웠다.
 
 **해결**: 한꺼번에 해결하려던 방식을 버리고 로그를 처음부터 읽어 오류를 하나씩 분리. 각 오류가 다시 나타나는 가장 작은 실행 단위를 만들어 그 안에서 원인을 확인하고 수정.
 

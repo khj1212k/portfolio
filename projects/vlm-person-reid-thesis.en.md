@@ -36,7 +36,7 @@ flowchart TB
     D -- "LoRA weights" --> I
 ```
 
-Training ran on Alibaba Cloud GPUs with PyTorch, Hugging Face Transformers, PEFT and DeepSpeed, from a fork of the open-source lmms-finetune framework.
+Training ran on rented cloud GPUs with PyTorch, Hugging Face Transformers, PEFT and DeepSpeed, from a fork of the open-source lmms-finetune framework.
 
 ### 1. Recasting the task — The model had never compared the people in two images
 
@@ -56,7 +56,7 @@ Training ran on Alibaba Cloud GPUs with PyTorch, Hugging Face Transformers, PEFT
 
 ### 3. Training errors — Three errors overlapped and the cause was hard to isolate
 
-**Problem**: A multi-GPU configuration error, an image-token count mismatch and a DeepSpeed sparse-attention conflict appeared together, and it was hard to tell which one was the cause.
+**Problem**: A multi-GPU configuration error, an image-token count mismatch and a DeepSpeed CUDA version mismatch appeared together, and it was hard to tell which one was the cause.
 
 **Solution**: Gave up trying to fix everything at once, read the logs from the top and separated the errors one by one. Built the smallest run that reproduced each error, confirmed the cause inside it and fixed it.
 

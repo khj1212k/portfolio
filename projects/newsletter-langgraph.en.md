@@ -131,7 +131,7 @@ Every commit is under my account, so the repository alone does not show the spli
 <summary><b>Limitations</b></summary>
 
 - The service was never deployed. There are no real users and no usage logs
-- The follow-up generation job is switched off in the schedule, and there is no record of a full run on real data on main
+- Only the collector runs on a schedule; generation is not scheduled. One full run on real articles on 2026-10-17 (14 newsletters from 15 clusters, median 9.3 s per cluster, $0.156 in total). No human labels, not a model comparison, and the cost is the program ledger value, not checked against billing
 - No human-labeled measure of newsletter quality or cluster-split quality exists. In the team phase the judge was an LLM
 - The source-check figures measure robustness to notation differences, not the blocking rate on real output
 - The 500 caught cases exclude 15 where the changed value already appeared elsewhere. The 0 false positives were re-measured on the same 494 cases after the causes were fixed; before the fix there were 14
