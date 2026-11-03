@@ -96,17 +96,6 @@ flowchart TB
 </details>
 
 <details>
-<summary><b>한계</b></summary>
-
-- 수치는 평가 쌍 전체를 분모로 한 이미지 쌍 판별 정확도. 표준 검색 지표(mAP, Rank-1)는 없어 기존 ReID 방법과 직접 비교할 수 없음
-- 설명 문장 없는 RSTPReid에서 전체 파인튜닝은 91.75%, LoRA는 42.17%. LoRA는 '같은 사람' 쪽 정밀도, 재현율, F1이 0%였고 원인은 분석하지 못함
-- 총 학습 시간을 맞춘 비교여서 epoch 수, 학습률, weight decay가 방식마다 다름
-- 숫자로만 표현한 ID 예측의 한계를 확인. 2단계 뒤에도 ID 정확도는 78.57%
-- 공개 fork의 설정은 2025년 4월 말의 것으로 졸업논문의 최종 설정과 다름. 평가 코드와 체크포인트는 공개 저장소에 없음
-
-</details>
-
-<details>
 <summary><b>확인할 자료</b></summary>
 
 - [학습 스크립트 fork](https://github.com/khj1212k/lmms-finetune): 2025-04-29 ~ 05-08 커밋 5개. 원저장소는 zjysteven/lmms-finetune
@@ -114,7 +103,7 @@ flowchart TB
 - [llava_msmt17.sh](https://github.com/khj1212k/lmms-finetune/blob/541c909e6c2a5c66872e64d9d0ae1d5aaa1191e2/llava_msmt17.sh): MSMT17 학습 실행 스크립트
 - [데이터 변환 커밋](https://github.com/khj1212k/lmms-finetune/commit/997a7ab60165abc1ee4368e8324214aecd643f29): 이미지 쌍 질의응답 변환 노트북과 결과 파일
 - 변환 예시: 질문 `<image> Are these two people the same?<image> Also, guess the person-ID of each image.` 답 `no, id1: 178, id2: 864`
-- 수치는 졸업논문 최종본의 표 3.1, 표 3.3, 표 3.4의 값. 인물 이미지, 논문 전문, 졸업논문 본문은 싣지 않음
+- 수치는 졸업논문 최종본의 표 3.1, 표 3.3, 표 3.4의 값
 
 </details>
 

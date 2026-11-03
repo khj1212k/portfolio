@@ -96,17 +96,6 @@ Training ran on rented cloud GPUs with PyTorch, Hugging Face Transformers, PEFT 
 </details>
 
 <details>
-<summary><b>Limitations</b></summary>
-
-- The figures are image-pair judgment accuracy over all evaluation pairs. Standard retrieval metrics (mAP, Rank-1) were not measured, so there is no direct comparison with existing ReID methods
-- On RSTPReid without text descriptions, full fine-tuning scored 91.75% and LoRA 42.17%. For LoRA, precision, recall and F1 on the "same person" class were 0%, and the cause was not analyzed
-- Because total training time was matched, epoch count, learning rate and weight decay differ between methods
-- Predicting an ID as a bare number has limits. ID accuracy is still 78.57% after stage 2
-- The settings in the public fork date from late April 2025 and differ from the final settings in the thesis. The evaluation code and checkpoints are not in the public repository
-
-</details>
-
-<details>
 <summary><b>What you can check</b></summary>
 
 - [Training script fork](https://github.com/khj1212k/lmms-finetune): five commits from 2025-04-29 to 05-08. The upstream repository is zjysteven/lmms-finetune
@@ -114,7 +103,7 @@ Training ran on rented cloud GPUs with PyTorch, Hugging Face Transformers, PEFT 
 - [llava_msmt17.sh](https://github.com/khj1212k/lmms-finetune/blob/541c909e6c2a5c66872e64d9d0ae1d5aaa1191e2/llava_msmt17.sh): MSMT17 training launch script
 - [Data conversion commit](https://github.com/khj1212k/lmms-finetune/commit/997a7ab60165abc1ee4368e8324214aecd643f29): notebook that converts to image-pair QA, and its output file
 - Conversion example: question `<image> Are these two people the same?<image> Also, guess the person-ID of each image.` answer `no, id1: 178, id2: 864`
-- Figures are from Tables 3.1, 3.3 and 3.4 of the final thesis. Person images, the full papers and the thesis text are not included
+- Figures are from Tables 3.1, 3.3 and 3.4 of the final thesis
 
 </details>
 

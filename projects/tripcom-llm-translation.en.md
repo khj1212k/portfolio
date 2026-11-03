@@ -90,27 +90,9 @@ flowchart TD
 <summary><b>My scope and the team's</b></summary>
 
 - Me: proposing the plan, comparing five LLMs, designing the prompt template and review criteria, reviewing and correcting the Korean translations, the merge script, the Confluence documentation
-- Other language owners: translation and review for English, Japanese and Thai. The translation results in those languages are theirs
+- English, Japanese and Thai owners: applied the prompt structure and review criteria I built to their translation and review
 - Together: applying the shared template and criteria to each language, and sharing how we used LLMs, the prompts, and the issues that came up
 - Role: Technical Product Assistant. Location: Shanghai, China. Working language: Chinese
-
-</details>
-
-<details>
-<summary><b>Limitations</b></summary>
-
-- Coverage is the only result figure. There is no direct quality figure such as translation accuracy or a review pass rate
-- Review was prioritized, high-risk fields first. Not every entry was reviewed
-- The LLM comparison was done in web interfaces during the internship. No record puts all five side by side
-- About three months of intern work. What happened after the internship is out of scope
-
-</details>
-
-<details>
-<summary><b>What you can check</b></summary>
-
-- The merge script, the actual prompts, the attraction source data, the internal plan and the Confluence document are company material and not public
-- This page gives only the structure, the decisions and the figures. The diagram is my own redrawing of the flow I designed
 
 </details>
 

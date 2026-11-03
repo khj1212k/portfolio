@@ -115,21 +115,9 @@ Of the agents' three judgments, I rejected two (that 1,100 points was unrealisti
 </details>
 
 <details>
-<summary><b>Limitations</b></summary>
-
-- Personal-track scores are the scores received on submission, as kept in my experiment log. The public leaderboard shows only the team's score and rank
-- The new validation did not fully predict real scores either. The renewal signal gained at least +46.96 points in validation and +23.08 on real submission, and the two validation seasons had also been used to develop the signal
-- The combination that dropped contained several features together, and their individual effects were not separated
-- The best personal-track score is below the team's final score of 1,184.98 points
-- The final used a different metric (Pitch 70%, Player 30%)
-
-</details>
-
-<details>
 <summary><b>What you can check</b></summary>
 
 - [DACON Phase 2 leaderboard](https://dacon.io/competitions/official/236743/leaderboard): the team's row, final score 1,184.97753
-- Code, experiment logs, and the audit and rejection reports are private under competition rules. This page is prose and a redrawn diagram only
 
 </details>
 

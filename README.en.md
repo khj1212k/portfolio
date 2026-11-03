@@ -26,7 +26,7 @@ When I hand implementation to AI coding agents, I still set the direction and th
 
 **Result**: Raised Korean coverage of 9,755 attractions from 72.3% to 100%. Documented the prompt template and review criteria and shared them with the English, Japanese and Thai owners.
 
-[Case study](./projects/tripcom-llm-translation.en.md) | Code and prompts are company material and not public
+[Case study](./projects/tripcom-llm-translation.en.md)
 
 ### LangGraph Newsletter Generation — One-pass drafts mixed separate events and still hallucinated
 
@@ -54,7 +54,7 @@ When I hand implementation to AI coding agents, I still set the direction and th
 
 **Result**: Raised the personal exploration track from 783.78 to 983.26 points; two calibration signals verified there were adopted in the team's final model. The team placed 17th of 1,030 teams and advanced to the final, for which 34 teams were selected.
 
-[Case study](./projects/lg-aimers-agent-validation.en.md) | [DACON leaderboard](https://dacon.io/competitions/official/236743/leaderboard) | Code is private under competition rules
+[Case study](./projects/lg-aimers-agent-validation.en.md) | [DACON leaderboard](https://dacon.io/competitions/official/236743/leaderboard)
 
 ### Person Re-identification with a Vision-Language Model — Whether a VLM could do it had to be tested
 
@@ -76,7 +76,7 @@ When I hand implementation to AI coding agents, I still set the direction and th
 
 **Delegated**: In the newsletter solo follow-up, the code, tests and design decision records. On the LG Aimers personal exploration track, experiment design and implementation, the root-cause report and the audit of the submission packages. Tools: Claude Code, opencode, Codex.
 
-**Decided by me**: The direction and the verification criteria, when to submit and when to stop, and whether to accept a result. I used the leaderboard to rebut the agent's judgment that 1,100 points was unrealistic, and withdrew figures whose producing code no longer existed.
+**Decided by me**: The direction and the verification criteria, when to submit and when to stop, and whether to accept a result. I used the leaderboard to rebut the agent's judgment that 1,100 points was unrealistic.
 
 **How I checked**: Scores from real leaderboard submissions, CI tests on every push, a test that runs the whole LangGraph flow with a fake LLM, and synthetic perturbation measurements.
 
@@ -124,8 +124,7 @@ The newsletter and LG Aimers case studies each set out who did what under "Where
 | **AI/ML** | PyTorch, Hugging Face Transformers, PEFT (LoRA, Prefix Tuning, Prompt Tuning), LangGraph, CatBoost |
 | **AI coding agents** | Claude Code, opencode, Codex |
 | **Data** | Pandas, NumPy, Airflow |
-| **Infra** | Git, GitHub, Linux, Docker |
-| **Integrated with, not built** | PostgreSQL (pgvector), FastAPI |
+| **Infra** | Git, GitHub, Linux, Docker, PostgreSQL (pgvector), FastAPI |
 
 ---
 

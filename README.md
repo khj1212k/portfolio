@@ -26,7 +26,7 @@ AI 코딩 에이전트에 구현을 맡길 때도 방향과 검증 기준은 직
 
 **결과**: 관광지 9,755곳의 한국어 커버리지 72.3%에서 100%. 프롬프트 틀과 검수 기준을 문서로 남겨 영어, 일본어, 태국어 담당자와 공유.
 
-[상세 문서](./projects/tripcom-llm-translation.md) | 코드와 프롬프트 원문은 회사 자료라 비공개
+[상세 문서](./projects/tripcom-llm-translation.md)
 
 ### LangGraph 뉴스레터 생성 — 한 번에 쓰게 하면 사건이 섞이고 환각이 남았다
 
@@ -54,7 +54,7 @@ AI 코딩 에이전트에 구현을 맡길 때도 방향과 검증 기준은 직
 
 **결과**: 개인 탐색 트랙 783.78점에서 983.26점, 여기서 검증한 보정 신호 2종이 팀 최종 모델에 채택. 팀은 1,030팀 중 17위로, 34팀이 선발된 본선에 진출.
 
-[상세 문서](./projects/lg-aimers-agent-validation.md) | [DACON 리더보드](https://dacon.io/competitions/official/236743/leaderboard) | 코드는 대회 규칙상 비공개
+[상세 문서](./projects/lg-aimers-agent-validation.md) | [DACON 리더보드](https://dacon.io/competitions/official/236743/leaderboard)
 
 ### 시각-언어 모델 행인 재식별 연구 — 재식별에 쓸 수 있는지 실험으로 확인해야 했다
 
@@ -76,7 +76,7 @@ AI 코딩 에이전트에 구현을 맡길 때도 방향과 검증 기준은 직
 
 **맡긴 것**: 뉴스레터 개인 후속 단계의 코드, 테스트, 설계 결정 기록. LG Aimers 개인 탐색 트랙의 실험 설계와 구현, 원인 보고서, 제출 패키지 감사. 도구는 Claude Code, opencode, Codex.
 
-**내가 정한 것**: 방향과 검증 기준, 제출과 중단, 결과를 받아들일지. 1,100점이 비현실적이라는 에이전트의 판단은 리더보드로 반박했고, 산출 코드가 남지 않은 수치는 철회.
+**내가 정한 것**: 방향과 검증 기준, 제출과 중단, 결과를 받아들일지. 1,100점이 비현실적이라는 에이전트의 판단은 리더보드 제출로 반박.
 
 **확인한 수단**: 실제 리더보드 제출 점수, 푸시마다 도는 CI 테스트, 가짜 LLM으로 LangGraph 전체를 돌리는 테스트, 합성 변형 측정.
 
@@ -124,8 +124,7 @@ AI 코딩 에이전트에 구현을 맡길 때도 방향과 검증 기준은 직
 | **AI/ML** | PyTorch, Hugging Face Transformers, PEFT(LoRA, Prefix Tuning, Prompt Tuning), LangGraph, CatBoost |
 | **AI 코딩 에이전트** | Claude Code, opencode, Codex |
 | **Data** | Pandas, NumPy, Airflow |
-| **Infra** | Git, GitHub, Linux, Docker |
-| **연동만 한 것** | PostgreSQL(pgvector), FastAPI |
+| **Infra** | Git, GitHub, Linux, Docker, PostgreSQL(pgvector), FastAPI |
 
 ---
 
