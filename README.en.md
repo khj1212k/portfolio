@@ -40,7 +40,7 @@ When I hand implementation to AI coding agents, I still set the direction and th
 
 **Result**: Capped generation at three attempts; a draft that still fails evaluation is not saved. In the follow-up, the source check caught all 500 synthetic cases in which a number had been altered.
 
-[Case study](./projects/newsletter-langgraph.en.md) | [Code and tests](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01) | [ADR 0010](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/blob/537193f2a2632cd5b340d079fda159459ee8dd37/docs/adr/0010-faithfulness-gate-and-judge-v2.md)
+[Case study](./projects/newsletter-langgraph.en.md) | [Code and tests](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01) | [ADR 0010](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/blob/a797aba9f1a4cbefb20cab4f68b82c67e70bdc72/docs/adr/0010-faithfulness-gate-and-judge-v2.md)
 
 ### LG Aimers 9th Hackathon — The top local-validation combination collapsed on real submission
 

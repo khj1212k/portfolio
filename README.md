@@ -40,7 +40,7 @@ AI 코딩 에이전트를 지휘할 때도 방향과 검증 기준은 직접 정
 
 **결과**: 생성은 최대 3번, 끝내 평가를 통과하지 못한 초안은 저장하지 않는 흐름. 후속 단계의 원문 대조 검사는 수치를 바꾼 합성 변형 500건을 모두 검출.
 
-[상세 문서](./projects/newsletter-langgraph.md) | [코드와 테스트](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01) | [ADR 0010](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/blob/537193f2a2632cd5b340d079fda159459ee8dd37/docs/adr/0010-faithfulness-gate-and-judge-v2.md)
+[상세 문서](./projects/newsletter-langgraph.md) | [코드와 테스트](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01) | [ADR 0010](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/blob/a797aba9f1a4cbefb20cab4f68b82c67e70bdc72/docs/adr/0010-faithfulness-gate-and-judge-v2.md)
 
 ### LG Aimers 9기 해커톤 — 로컬 검증 1위 조합이 실제 제출에서 급락했다
 
