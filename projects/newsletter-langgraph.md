@@ -38,7 +38,7 @@ flowchart TD
 
 실선 상자는 팀 단계에서 설계한 흐름이고, 점선 상자 둘은 개인 후속 단계에서 더한 검사입니다.
 
-### 1. 생성과 평가 분리 — 프롬프트 수정만으로는 환각과 누락을 막지 못했다
+### 1. 생성과 평가 분리 — 환각과 누락을 구조로 막아야 했다
 
 **문제**: 프롬프트를 다듬는 것만으로는 환각과 핵심 사실 누락을 매번 막을 수 없었다.
 
@@ -60,7 +60,7 @@ flowchart TD
 
 **해결**: Airflow 배치를 둘로 나눠 수집, 본문 추출, 임베딩은 하루 7회 쌓고 군집화와 생성은 하루 1회 실행. 구현 전에 데이터 형식, API, DB 저장 기준을 팀과 합의. 통합 LLM 클라이언트 한 곳에서 재시도와 파싱 관리.
 
-**결과**: 수집 하루 7회, 군집화와 생성 하루 1회로 도는 Airflow DAG 두 개. 이때 넣은 재시도에는 상한이 없었고 4번에서 수정.
+**결과**: 수집 하루 7회, 군집화와 생성 하루 1회로 도는 Airflow DAG 두 개. 재시도 상한은 4번에서 추가.
 
 ---
 
@@ -85,7 +85,7 @@ flowchart TD
 | 생성 흐름, 팀 단계 | 생성 최대 3번, 미달이면 저장하지 않음 | 팀 종료 커밋의 그래프 분기와 설정값 |
 | 배치 주기, 팀 단계 | 수집 하루 7회, 군집화와 생성 하루 1회 | 팀 종료 커밋의 Airflow DAG 두 개 |
 | 원문 대조 검사, 후속 단계 | 수치 변형 500/500 검출, 표기 변형 오탐 0/494 | 팀 아카이브 뉴스레터 401편에 가한 합성 변형 |
-| 재시도 상한, 후속 단계 | 상한 없던 3곳 수정 | 세 곳 모두 상한에서 멈추는지 테스트로 확인 |
+| 재시도 상한, 후속 단계 | 재시도 경로 3곳에 상한 추가 | 세 곳 모두 상한에서 멈추는지 테스트로 확인 |
 
 ---
 
@@ -98,18 +98,18 @@ flowchart TD
 | --- | --- |
 | 전체 아키텍처, 데이터 흐름, 모듈 인터페이스 | 본인 주도, 형식과 저장 기준은 팀 합의 |
 | LangGraph 생성과 평가 흐름 | 본인 |
-| RSS 수집과 정제, 임베딩과 군집화, 뉴스레터 제작과 프롬프트, 통합 LLM 클라이언트 | 본인, 팀 README에는 팀원 1명과 함께 표기 |
+| RSS 수집과 정제, 임베딩과 군집화, 뉴스레터 제작과 프롬프트, 통합 LLM 클라이언트 | 본인 주도(팀 README 공동 표기) |
 | Airflow 배치, ERD 설계, 기획 | 본인과 팀원 공동 |
 | 추천 모델, FastAPI 백엔드와 DB, 프론트엔드, 합성 데이터셋 | 팀원 |
 
-추천과 화면을 포함한 서비스 전체는 팀 결과입니다. 익명 동료 평가에서는 팀원 4명 모두 '명확한 커뮤니케이션'을, 3명이 '리더십'을 강점으로 꼽았습니다. 팀 종료 커밋까지가 팀 작업이고 그 뒤 커밋 463개가 개인 후속 작업이어서, 경계가 Git 이력에 남습니다.
+추천과 화면을 포함한 서비스 전체는 팀 결과입니다. 익명 동료 평가에서는 팀원 4명 모두 '명확한 커뮤니케이션'을, 3명이 '리더십'을 강점으로 꼽았습니다. 팀 종료 커밋까지가 팀 작업이고 그 뒤 커밋 831개가 개인 후속 작업이어서, 경계가 Git 이력에 남습니다.
 
 </details>
 
 <details>
 <summary><b>AI 코딩 에이전트를 쓴 부분</b></summary>
 
-- 에이전트가 한 일: 팀 종료 뒤 커밋 463개의 코드, 테스트, 문서. 설계 대안의 조사와 제안, 2026.07 코드 리뷰
+- 에이전트가 한 일: 팀 종료 뒤 커밋 831개의 코드, 테스트, 문서. 설계 대안의 조사와 제안, 2026.07 코드 리뷰
 - 내가 정한 것: AI 파트를 우선한다는 방향, fork에서 계속한다는 결정, 설계 결정을 기록(ADR)으로 남기게 한 것, 에이전트 사용의 공개
 - 확인한 수단: 푸시마다 도는 CI 테스트, 가짜 LLM으로 그래프 전체를 돌리는 테스트, 합성 변형 측정
 - 후속 단계에서 더한 기술: OpenAI 호환 LLM 어댑터(Gemini), Docker Compose, GitHub Actions
@@ -124,14 +124,14 @@ flowchart TD
 - [workflow/graph.py](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/blob/ef7c176c4f795aad0d70e1c63ebd026065f4cd1e/ai_workspace/workflow/graph.py): 팀 단계의 생성, 평가, 재생성 분기
 - [workflow/nodes.py](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/blob/ef7c176c4f795aad0d70e1c63ebd026065f4cd1e/ai_workspace/workflow/nodes.py), [workflow/evaluators.py](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/blob/ef7c176c4f795aad0d70e1c63ebd026065f4cd1e/ai_workspace/workflow/evaluators.py): 수정 의견 누적, 판정 기준
 - [core/clustering/split_v2.py](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/blob/ef7c176c4f795aad0d70e1c63ebd026065f4cd1e/ai_workspace/core/clustering/split_v2.py): 2차 분할
-- [ADR 0010](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/blob/1a42b46c6efa93431e1dd0eb5fff0083ce14d914/docs/adr/0010-faithfulness-gate-and-judge-v2.md): 원문 대조 검사의 대안과 증거
-- [그래프 수준 테스트](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/blob/1a42b46c6efa93431e1dd0eb5fff0083ce14d914/tests/test_workflow_faithfulness_gates.py): 가짜 LLM으로 LangGraph 전체 실행
-- [ADR 0009](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/blob/1a42b46c6efa93431e1dd0eb5fff0083ce14d914/docs/adr/0009-llm-eval-protocol-and-preregistered-decision-rule.md): 사전 등록한 LLM 평가 규칙
-- [2026.07 리뷰 기록](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/blob/1a42b46c6efa93431e1dd0eb5fff0083ce14d914/docs/fix-log-2026-07.md), [커밋 `e962deb`](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/commit/e962deb18695d648c83679bb36b835688e7a3f93): 재시도 상한 수정
-- [커밋 이력](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/commits/1a42b46c6efa93431e1dd0eb5fff0083ce14d914): 팀 종료 뒤 커밋 463개, 설계 결정 기록 19건, 병합된 PR 22개. 추천 쪽 작업을 포함한 저장소 전체의 수
+- [ADR 0010](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/blob/537193f2a2632cd5b340d079fda159459ee8dd37/docs/adr/0010-faithfulness-gate-and-judge-v2.md): 원문 대조 검사의 대안과 증거
+- [그래프 수준 테스트](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/blob/537193f2a2632cd5b340d079fda159459ee8dd37/tests/test_workflow_faithfulness_gates.py): 가짜 LLM으로 LangGraph 전체 실행
+- [ADR 0009](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/blob/537193f2a2632cd5b340d079fda159459ee8dd37/docs/adr/0009-llm-eval-protocol-and-preregistered-decision-rule.md): 사전 등록한 LLM 평가 규칙
+- [2026.07 리뷰 기록](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/blob/537193f2a2632cd5b340d079fda159459ee8dd37/docs/fix-log-2026-07.md), [커밋 `e962deb`](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/commit/e962deb18695d648c83679bb36b835688e7a3f93): 재시도 상한 수정
+- [커밋 이력](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/commits/537193f2a2632cd5b340d079fda159459ee8dd37): 팀 종료 뒤 커밋 831개, 설계 결정 기록 23건, 병합된 PR 63개(2026-11-12 기준). 추천 쪽 작업을 포함한 저장소 전체의 수
 - [팀 원본 저장소](https://github.com/boostcampaitech8/pro-recsys-finalproject-recsys-01)
 
-팀 단계 링크는 팀 종료 커밋 `ef7c176`에, 후속 단계 링크는 fork main 커밋 `1a42b46`(2026-10-06)에 고정했고, 이 커밋의 CI는 통과했습니다.
+팀 단계 링크는 팀 종료 커밋 `ef7c176`에, 후속 단계 링크는 fork 커밋 `537193f`(2026-11-12)에 고정했습니다.
 
 </details>
 

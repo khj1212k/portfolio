@@ -38,7 +38,7 @@ flowchart TD
 
 Solid boxes are the flow designed in the team phase; the two dashed boxes are checks added in the solo follow-up.
 
-### 1. Separate generation and evaluation — Prompt edits alone did not stop hallucination or omissions
+### 1. Separate generation and evaluation — Hallucination and omissions needed a structural check
 
 **Problem**: Prompt tuning alone could not reliably prevent hallucination or missing key facts.
 
@@ -60,7 +60,7 @@ Solid boxes are the flow designed in the team phase; the two dashed boxes are ch
 
 **Solution**: Split the Airflow batches in two: collection, body extraction and embedding run seven times a day, clustering and generation once. Agreed data formats, APIs and database storage rules with the team before implementation. Moved retries and parsing into a single unified LLM client.
 
-**Result**: Two Airflow DAGs, one collecting seven times a day and one clustering and generating once a day. The retries added here had no upper bound; that was fixed in item 4.
+**Result**: Two Airflow DAGs, one collecting seven times a day and one clustering and generating once a day. Retry upper bounds were added in item 4.
 
 ---
 
@@ -85,7 +85,7 @@ This is the work after the final team commit `ef7c176` (2026-02-10), ongoing on 
 | Generation flow, team phase | At most three attempts; a failing draft is not saved | Graph branches and settings at the final team commit |
 | Batch schedule, team phase | Collection 7 times a day, clustering and generation once | Two Airflow DAGs at the final team commit |
 | Source check, follow-up | 500 of 500 altered numbers caught; 0 of 494 false positives | Synthetic perturbations of 401 archived team newsletters |
-| Retry bounds, follow-up | Three unbounded retry paths fixed | Tests check that all three stop at their bound |
+| Retry bounds, follow-up | Upper bounds added to three retry paths | Tests check that all three stop at their bound |
 
 ---
 
@@ -98,18 +98,18 @@ This is the work after the final team commit `ef7c176` (2026-02-10), ongoing on 
 | --- | --- |
 | Overall architecture, data flow, module interfaces | Led by me; formats and storage rules agreed by the team |
 | LangGraph generation and evaluation flow | Me |
-| RSS collection and cleaning, embedding and clustering, newsletter writing and prompts, unified LLM client | Me; the team README lists one teammate as well |
+| RSS collection and cleaning, embedding and clustering, newsletter writing and prompts, unified LLM client | Led by me (listed jointly in the team README) |
 | Airflow batches, ERD design, planning | Shared between me and teammates |
 | Recommendation model, FastAPI backend and database, frontend, synthetic dataset | Teammates |
 
-The service as a whole, including recommendation and the UI, is a team result. In the anonymous peer review, all four teammates named clear communication as a strength and three named leadership. Everything up to the final team commit is team work and the 463 commits after it are my solo follow-up, so the boundary is in the Git history.
+The service as a whole, including recommendation and the UI, is a team result. In the anonymous peer review, all four teammates named clear communication as a strength and three named leadership. Everything up to the final team commit is team work and the 831 commits after it are my solo follow-up, so the boundary is in the Git history.
 
 </details>
 
 <details>
 <summary><b>Where AI coding agents were used</b></summary>
 
-- What the agent did: the code, tests and documents in the 463 commits after the final team commit; researching and proposing design options; the July 2026 code review
+- What the agent did: the code, tests and documents in the 831 commits after the final team commit; researching and proposing design options; the July 2026 code review
 - What I decided: the direction of putting the AI part first, continuing on the fork, having design decisions recorded as ADRs, and disclosing the use of an agent
 - How I checked: CI tests on every push, a test that runs the whole graph with a fake LLM, synthetic perturbation measurement
 - Technology added in the follow-up: an OpenAI-compatible LLM adapter (Gemini), Docker Compose, GitHub Actions
@@ -124,14 +124,14 @@ The service as a whole, including recommendation and the UI, is a team result. I
 - [workflow/graph.py](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/blob/ef7c176c4f795aad0d70e1c63ebd026065f4cd1e/ai_workspace/workflow/graph.py): team-phase generation, evaluation and regeneration branches
 - [workflow/nodes.py](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/blob/ef7c176c4f795aad0d70e1c63ebd026065f4cd1e/ai_workspace/workflow/nodes.py), [workflow/evaluators.py](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/blob/ef7c176c4f795aad0d70e1c63ebd026065f4cd1e/ai_workspace/workflow/evaluators.py): accumulated comments, judging criteria
 - [core/clustering/split_v2.py](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/blob/ef7c176c4f795aad0d70e1c63ebd026065f4cd1e/ai_workspace/core/clustering/split_v2.py): second-stage split
-- [ADR 0010](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/blob/1a42b46c6efa93431e1dd0eb5fff0083ce14d914/docs/adr/0010-faithfulness-gate-and-judge-v2.md): options and evidence for the source check
-- [Graph-level tests](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/blob/1a42b46c6efa93431e1dd0eb5fff0083ce14d914/tests/test_workflow_faithfulness_gates.py): the whole LangGraph flow run with a fake LLM
-- [ADR 0009](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/blob/1a42b46c6efa93431e1dd0eb5fff0083ce14d914/docs/adr/0009-llm-eval-protocol-and-preregistered-decision-rule.md): pre-registered LLM evaluation rule
-- [July 2026 review log](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/blob/1a42b46c6efa93431e1dd0eb5fff0083ce14d914/docs/fix-log-2026-07.md), [commit `e962deb`](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/commit/e962deb18695d648c83679bb36b835688e7a3f93): retry bound fixes
-- [Commit history](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/commits/1a42b46c6efa93431e1dd0eb5fff0083ce14d914): 463 commits after the final team commit, 19 design decision records, 22 merged PRs. These counts cover the whole repository, including the recommendation work
+- [ADR 0010](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/blob/537193f2a2632cd5b340d079fda159459ee8dd37/docs/adr/0010-faithfulness-gate-and-judge-v2.md): options and evidence for the source check
+- [Graph-level tests](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/blob/537193f2a2632cd5b340d079fda159459ee8dd37/tests/test_workflow_faithfulness_gates.py): the whole LangGraph flow run with a fake LLM
+- [ADR 0009](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/blob/537193f2a2632cd5b340d079fda159459ee8dd37/docs/adr/0009-llm-eval-protocol-and-preregistered-decision-rule.md): pre-registered LLM evaluation rule
+- [July 2026 review log](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/blob/537193f2a2632cd5b340d079fda159459ee8dd37/docs/fix-log-2026-07.md), [commit `e962deb`](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/commit/e962deb18695d648c83679bb36b835688e7a3f93): retry bound fixes
+- [Commit history](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/commits/537193f2a2632cd5b340d079fda159459ee8dd37): 831 commits after the final team commit, 23 design decision records, 63 merged PRs (as of 2026-11-12). These counts cover the whole repository, including the recommendation work
 - [Original team repository](https://github.com/boostcampaitech8/pro-recsys-finalproject-recsys-01)
 
-Team-phase links are pinned to the final team commit `ef7c176`, follow-up links to fork main commit `1a42b46` (2026-10-06), whose CI run passed.
+Team-phase links are pinned to the final team commit `ef7c176`, follow-up links to fork commit `537193f` (2026-11-12).
 
 </details>
 

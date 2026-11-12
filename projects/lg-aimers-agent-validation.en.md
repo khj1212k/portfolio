@@ -43,7 +43,7 @@ The sequence from the drop to sharing with the team.
 
 ### 2. Stopping the experiments — The top local-validation combination dropped to 415 points
 
-**Problem**: I trusted the combination the agent recommended as best in local validation and submitted it as it was. It had passed the leakage checks too, yet it scored lower than anything submitted before.
+**Problem**: I submitted the combination the agent recommended as best in local validation. It had passed the leakage checks too, yet it scored lower than anything submitted before.
 
 **Solution**: Stopped every experiment and had the results so far written up as a report.
 
@@ -67,7 +67,7 @@ The sequence from the drop to sharing with the team.
 
 ### 5. Bar for team code — The agent assumed my track's techniques overlapped with the team's code
 
-**Problem**: My track's score was below the team model's, and the agent assumed its techniques overlapped with the team's code.
+**Problem**: I had to decide whether my track's techniques should go into the team model, and the agent assumed they overlapped with the team's code.
 
 **Solution**: Had the agent compare against the team's code directly instead of assuming. Set the bar that a candidate missing from the team's code goes in only if it shows a measured gain on the team's submission path.
 
@@ -95,7 +95,7 @@ The sequence from the drop to sharing with the team.
 - Handed to the team: two sets of predictions for the team merge with the inference code, and the six EDA and feature slides in the final presentation
 - Teammates: composing and combining the team's final submitted model, deciding the merge specification, deciding to adopt the calibration signals
 - The ranking and the place in the final are team results from the team's final model
-- Tech: Python, Pandas, NumPy, CatBoost, season-level walk-forward time-series cross-validation. TabPFN was only checked for feasibility
+- Tech: Python, Pandas, NumPy, CatBoost, season-level walk-forward time-series cross-validation. TabPFN was evaluated for feasibility
 
 </details>
 
@@ -110,7 +110,7 @@ The sequence from the drop to sharing with the team.
 | Sharing with the team | Comparison with team code, measuring four candidates, the design document and notebook, extracting the predictions | Merging only measured gains; rejecting the four |
 | Presentation and final | Writing the six EDA and feature slides; experiments, validation and submission in the final | Having the slides checked against the final submission notebook; reassigning agents to the Player metric |
 
-Of the agents' three judgments, I rejected two (that 1,100 points was unrealistic, and that my track overlapped with the team's code) and accepted the third, the top local-validation recommendation, as it was, which led to the drop. On the personal track I split the work between Claude Code and opencode; in the final I set up a root agent that assigned work to Codex workers.
+Of the agents' three judgments, I rejected two (that 1,100 points was unrealistic, and that my track overlapped with the team's code), and I used the drop of the top local-validation combination as the trigger to rebuild validation around real submission conditions. On the personal track I split the work between Claude Code and opencode; in the final I set up a root agent that assigned work to Codex workers.
 
 </details>
 

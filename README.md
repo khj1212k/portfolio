@@ -24,7 +24,7 @@ AI 코딩 에이전트를 지휘할 때도 방향과 검증 기준은 직접 정
 
 **해결**: LLM 번역 파이프라인 제작을 사내 문서로 제안. 5개 LLM을 같은 입력으로 비교해 모델 선택. 운영시간, 주소, 지명 같은 고위험 필드부터 검수하는 기준과 프롬프트 구조 설계.
 
-**결과**: 관광지 9,755곳의 한국어 커버리지 72.3%에서 100%. 프롬프트 구조과 검수 기준을 문서로 남겨 영어, 일본어, 태국어 담당자와 공유.
+**결과**: 관광지 9,755곳의 한국어 커버리지 72.3%에서 100%. 프롬프트 구조와 검수 기준을 문서로 남겨 영어, 일본어, 태국어 담당자와 공유.
 
 [상세 문서](./projects/tripcom-llm-translation.md)
 
@@ -40,7 +40,7 @@ AI 코딩 에이전트를 지휘할 때도 방향과 검증 기준은 직접 정
 
 **결과**: 생성은 최대 3번, 끝내 평가를 통과하지 못한 초안은 저장하지 않는 흐름. 후속 단계의 원문 대조 검사는 수치를 바꾼 합성 변형 500건을 모두 검출.
 
-[상세 문서](./projects/newsletter-langgraph.md) | [코드와 테스트](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01) | [ADR 0010](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/blob/1a42b46c6efa93431e1dd0eb5fff0083ce14d914/docs/adr/0010-faithfulness-gate-and-judge-v2.md)
+[상세 문서](./projects/newsletter-langgraph.md) | [코드와 테스트](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01) | [ADR 0010](https://github.com/khj1212k/pro-recsys-finalproject-recsys-01/blob/537193f2a2632cd5b340d079fda159459ee8dd37/docs/adr/0010-faithfulness-gate-and-judge-v2.md)
 
 ### LG Aimers 9기 해커톤 — 로컬 검증 1위 조합이 실제 제출에서 급락했다
 

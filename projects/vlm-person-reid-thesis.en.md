@@ -58,7 +58,7 @@ Training ran on rented cloud GPUs with PyTorch, Hugging Face Transformers, PEFT 
 
 **Problem**: A multi-GPU configuration error, an image-token count mismatch and a DeepSpeed CUDA version mismatch appeared together, and it was hard to tell which one was the cause.
 
-**Solution**: Gave up trying to fix everything at once, read the logs from the top and separated the errors one by one. Built the smallest run that reproduced each error, confirmed the cause inside it and fixed it.
+**Solution**: Read the logs from the top and separated the errors one by one. Built the smallest run that reproduced each error, confirmed the cause inside it and fixed it.
 
 **Result**: Ran training to the end after fixing the three in turn. The commit that fixes image-token handling is in the public fork.
 
