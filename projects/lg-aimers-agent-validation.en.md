@@ -110,7 +110,7 @@ The sequence from the drop to sharing with the team.
 | Sharing with the team | Comparison with team code, measuring four candidates, the design document and notebook, extracting the predictions | Merging only measured gains; rejecting the four |
 | Presentation and final | Writing the six EDA and feature slides; experiments, validation and submission in the final | Having the slides checked against the final submission notebook; reassigning agents to the Player metric |
 
-Of the agents' three judgments, I rejected two (that 1,100 points was unrealistic, and that my track overlapped with the team's code), and I used the drop of the top local-validation combination as the trigger to rebuild validation around real submission conditions. On the personal track I split the work between Claude Code and opencode; in the final I set up a root agent that assigned work to Codex workers.
+Of the agents' three judgments, I rejected two (that 1,100 points was unrealistic, and that my track overlapped with the team's code), and I used the drop of the top local-validation combination as the trigger to rebuild validation around real submission conditions. On the personal track I ran Claude Code per track in Orca; in the final I set up a root agent that assigned work to Codex workers.
 
 </details>
 

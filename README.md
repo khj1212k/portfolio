@@ -74,7 +74,7 @@ AI 코딩 에이전트를 지휘할 때도 방향과 검증 기준은 직접 정
 
 ## AI 코딩 에이전트를 쓰는 방식
 
-**에이전트가 실행한 것**: 뉴스레터 개인 후속 단계의 코드, 테스트, 설계 결정 기록. LG Aimers 개인 탐색 트랙의 실험 설계와 구현, 원인 보고서, 제출 패키지 감사. 도구는 Claude Code, opencode, Codex.
+**에이전트가 실행한 것**: 뉴스레터 개인 후속 단계의 코드, 테스트, 설계 결정 기록. LG Aimers 개인 탐색 트랙의 실험 설계와 구현, 원인 보고서, 제출 패키지 감사. 도구는 Claude Code, Codex, Orca.
 
 **내가 정한 것**: 방향과 검증 기준, 제출과 중단, 결과를 받아들일지. 1,100점이 비현실적이라는 에이전트의 판단은 리더보드 제출로 반박.
 
@@ -122,7 +122,7 @@ AI 코딩 에이전트를 지휘할 때도 방향과 검증 기준은 직접 정
 | --- | --- |
 | **Languages** | Python, SQL |
 | **AI/ML** | PyTorch, Hugging Face Transformers, PEFT(LoRA, Prefix Tuning, Prompt Tuning), LangGraph, CatBoost |
-| **AI 코딩 에이전트** | Claude Code, opencode, Codex |
+| **AI 코딩 에이전트** | Claude Code, Codex, Orca |
 | **Data** | Pandas, NumPy, Airflow |
 | **Infra** | Git, GitHub, Linux, Docker, PostgreSQL(pgvector), FastAPI |
 

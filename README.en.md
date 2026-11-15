@@ -74,7 +74,7 @@ When I hand implementation to AI coding agents, I still set the direction and th
 
 ## How I Use AI Coding Agents
 
-**Delegated**: In the newsletter solo follow-up, the code, tests and design decision records. On the LG Aimers personal exploration track, experiment design and implementation, the root-cause report and the audit of the submission packages. Tools: Claude Code, opencode, Codex.
+**Delegated**: In the newsletter solo follow-up, the code, tests and design decision records. On the LG Aimers personal exploration track, experiment design and implementation, the root-cause report and the audit of the submission packages. Tools: Claude Code, Codex, Orca.
 
 **Decided by me**: The direction and the verification criteria, when to submit and when to stop, and whether to accept a result. I used the leaderboard to rebut the agent's judgment that 1,100 points was unrealistic.
 
@@ -122,7 +122,7 @@ The newsletter and LG Aimers case studies each set out who did what under "Where
 | --- | --- |
 | **Languages** | Python, SQL |
 | **AI/ML** | PyTorch, Hugging Face Transformers, PEFT (LoRA, Prefix Tuning, Prompt Tuning), LangGraph, CatBoost |
-| **AI coding agents** | Claude Code, opencode, Codex |
+| **AI coding agents** | Claude Code, Codex, Orca |
 | **Data** | Pandas, NumPy, Airflow |
 | **Infra** | Git, GitHub, Linux, Docker, PostgreSQL (pgvector), FastAPI |
 
